@@ -581,36 +581,32 @@ const sfx={
 };
 
 /* =============== CLOUD (Firebase Realtime DB) + salvataggio locale =============== */
-const Cloud={ok:false,db:null,fns:null,id:null};
-function pid(){
-  if(Cloud.id)return Cloud.id;
-  let id=null;try{id=localStorage.getItem('nz_id');}catch(e){}
-  if(!id){id='p'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);try{localStorage.setItem('nz_id',id);}catch(e){}}
-  Cloud.id=id;return id;
-}
+const Cloud={ok:false,db:null,fns:null,uid:null};
+/* id giocatore = uid dell'accesso anonimo Firebase (le regole lo richiedono) */
+function pid(){return Cloud.uid;}
 const timeout=ms=>new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms));
 function cloudLabel(t){const e=$('cloud');if(e)e.textContent=t;}
 async function cloudGet(path){const f=Cloud.fns;const s=await Promise.race([f.get(f.ref(Cloud.db,ROOT+'/'+path)),timeout(4000)]);return s.val();}
-function cloudSet(path,val){try{if(!Cloud.ok)return;const f=Cloud.fns;Promise.resolve(f.set(f.ref(Cloud.db,ROOT+'/'+path),JSON.parse(JSON.stringify(val)))).catch(()=>{});}catch(e){}}
+function cloudSet(path,val){try{if(!Cloud.ok||!Cloud.uid)return;const f=Cloud.fns;Promise.resolve(f.set(f.ref(Cloud.db,ROOT+'/'+path),JSON.parse(JSON.stringify(val)))).catch(e=>console.warn('cloud',path,e&&e.message));}catch(e){}}
 async function cloudInit(){
   cloudLabel('Cloud: collegamento…');
   try{
     const base='https://www.gstatic.com/firebasejs/10.14.1/';
-    const mods=await Promise.race([Promise.all([import(base+'firebase-app.js'),import(base+'firebase-database.js')]),timeout(5000)]);
-    const app=mods[0].initializeApp(FIREBASE_CONFIG);
+    const mods=await Promise.race([Promise.all([import(base+'firebase-app.js'),import(base+'firebase-database.js'),import(base+'firebase-auth.js')]),timeout(6000)]);
+    const app=mods[0].initializeApp(FIREBASE_CONFIG,'nastrozero');
+    const auth=mods[2].getAuth(app);
+    const cred=await Promise.race([mods[2].signInAnonymously(auth),timeout(6000)]);
+    Cloud.uid=cred.user.uid;
     Cloud.db=mods[1].getDatabase(app);Cloud.fns=mods[1];Cloud.ok=true;
     await loadCatalog();
     cloudLabel('Cloud: Firebase collegato');
-  }catch(e){Cloud.ok=false;cloudLabel('Cloud: non raggiungibile — salvataggio locale');}
+  }catch(e){Cloud.ok=false;console.warn('cloud',e&&e.message);cloudLabel('Cloud: non raggiungibile — salvataggio locale');}
 }
 async function loadCatalog(){
+  // nastri e configurazione: solo lettura (si modificano dalla console Firebase)
+  try{const cat=await cloudGet('tapes3d');if(cat&&cat.t1&&cat.t1.cam&&cat.t2&&cat.t2.cam&&cat.t1.actors&&cat.t2.actors)TAPES=cat;}catch(e){}
+  try{const cfg=await cloudGet('config');if(cfg&&typeof cfg.len==='number')CFG=Object.assign({},DEF_CFG,cfg);}catch(e){}
   try{
-    const cat=await cloudGet('tapes3d');
-    if(cat&&cat.t1&&cat.t1.cam&&cat.t2&&cat.t2.cam&&cat.t1.actors&&cat.t2.actors){TAPES=cat;}
-    else cloudSet('tapes3d',DEF_TAPES);
-    const cfg=await cloudGet('config');
-    if(cfg&&typeof cfg.len==='number'){CFG=Object.assign({},DEF_CFG,cfg);}
-    else cloudSet('config',DEF_CFG);
     const st=await cloudGet('players/'+pid()+'/state');
     if(st&&st.night&&(st.ts||0)>(loadLocal()||{ts:0}).ts){try{localStorage.setItem('nz_save',JSON.stringify(st));}catch(e){}refreshTitle();}
   }catch(e){}
@@ -668,7 +664,7 @@ function saveState(){
   cloudSet('players/'+pid()+'/state',G);
 }
 function saveRun(res){
-  const o={night:G.night,res:res,deaths:G.deaths,stare:G.stare,path:pathLog.slice(-120),ts:Date.now()};
+  const o={night:G.night,res:res,deaths:G.deaths,stare:G.stare,path:pathLog.slice(-120).map(q=>[clamp(q[0],0,13),clamp(q[1],0,11)]),ts:Date.now()};
   cloudSet('players/'+pid()+'/runs/'+Date.now(),o);
 }
 
