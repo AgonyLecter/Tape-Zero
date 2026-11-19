@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>NASTRO ZERO — Notti 1-2</title>
+<title>NASTRO ZERO — Notti 1-3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Special+Elite&family=Reenie+Beanie&family=Rock+Salt&display=swap" rel="stylesheet">
 <style>
@@ -22,8 +22,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 #hud>*{position:absolute}
 .btn{font-family:inherit;font-size:22px;color:#e8e4d8;background:rgba(10,10,10,.55);border:1px solid rgba(232,228,216,.5);border-radius:10px;padding:8px 14px;cursor:pointer;display:none;touch-action:manipulation}
 .btn:active{background:rgba(232,228,216,.3)}
-#bFull{display:block;top:10px;right:10px;font-size:26px;padding:4px 12px}
-#bArms{top:10px;right:70px}
+#bArms{top:10px;right:14px}
 #bUse{right:22px;bottom:26px;font-size:28px;padding:16px 22px;border-width:2px;max-width:46%}
 #bWake{right:16px;bottom:78px;border-color:#c33;color:#f66}
 #bSkip{right:16px;bottom:16px}
@@ -47,10 +46,17 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 #txtBox{font-family:'Special Elite','Courier New',monospace;font-size:clamp(17px,3.2vw,26px);line-height:1.35;background:rgba(5,5,5,.82);border:1px solid #555;padding:14px 18px;width:100%;max-width:900px;min-height:60px}
 #txtHint{font-size:18px;opacity:.55;margin-top:6px;align-self:flex-end;max-width:900px}
 #note{background:rgba(0,0,0,.7)}
-#paper{background:#e6d97a;color:#171717;padding:26px 34px;max-width:78%;transform:rotate(-1.5deg);box-shadow:0 6px 30px #000;white-space:pre-line;font-size:clamp(26px,5vw,44px);line-height:1.1;text-align:center}
+#paper{background:#e6d97a;color:#171717;padding:3vh 4vw;max-width:80%;max-height:90vh;overflow:auto;transform:rotate(-1.5deg);box-shadow:0 6px 30px #000;white-space:pre-line;font-size:clamp(20px,min(5vw,7vh),44px);line-height:1.1;text-align:center}
 #paper.b{font-family:'Reenie Beanie',cursive}
-#paper.a{font-family:'Rock Salt',cursive;font-size:clamp(15px,2.8vw,24px);background:#cfc9b3;color:#7c1111;line-height:1.6;transform:rotate(1.5deg)}
+#paper.a{font-family:'Rock Salt',cursive;font-size:clamp(11px,min(2.6vw,3.5vh),24px);background:#cfc9b3;color:#7c1111;line-height:1.6;transform:rotate(1.5deg)}
 #paper.f{font-family:'Reenie Beanie',cursive;color:#16308a;letter-spacing:1.5px;background:#ddd16c}
+#paper.v{background:linear-gradient(#1b1b1b,#0c0c0c);padding:0;width:min(620px,78vw);border-radius:6px;transform:rotate(-1deg);font-family:'Rock Salt',cursive;white-space:normal}
+#paper.v .vb{padding:3vh 5% 2.5vh}
+#paper.v .lbl{background:#e9e3cf;color:#7c1111;padding:1.6vh 4%;font-size:clamp(11px,min(2.6vw,3.4vh),22px);line-height:1.5;white-space:pre-line;border-top:6px solid #8a1c1c}
+#paper.v .win{margin:2.5vh auto 0;width:62%;height:12vh;background:#050505;border:3px solid #2a2a2a;border-radius:4px;display:flex;justify-content:space-around;align-items:center}
+#paper.v .reel{width:9vh;height:9vh;border-radius:50%;background:radial-gradient(circle,#ddd 0 16%,#111 17% 24%,#3a2a20 25% 62%,#151515 63%);animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#paper.v .vh{font-family:'VT323',monospace;color:#888;font-size:min(3vw,3.6vh);text-align:right;margin-top:1vh;letter-spacing:2px}
 #armsView{background:rgba(0,0,0,.82);gap:14px}
 .arm{width:76%;max-width:760px;height:26%;border-radius:60px;background:linear-gradient(#cfa88b,#b48466);box-shadow:inset 0 -8px 20px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:0 40px;position:relative}
 .ink{font-family:'Reenie Beanie',cursive;color:#14203a;font-size:clamp(22px,4.6vw,40px);transform:rotate(-2deg);text-align:center;line-height:1}
@@ -58,14 +64,14 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 #mirrorView{background:rgba(0,0,0,.88);gap:12px}
 #mirFrame{width:58%;max-width:520px;height:62%;border:10px solid #3b2a1c;background:linear-gradient(135deg,#7d8f95,#31404a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px;transform:scaleX(-1)}
 #mirFrame .ink{color:#0b1220}
-#title{background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.55) 50%,rgba(0,0,0,.15) 100%);z-index:30;display:none;align-items:flex-start;text-align:left;padding:0 8%}
-#title h1{font-family:'VT323',monospace;font-size:clamp(46px,11vw,110px);margin:0;letter-spacing:6px;color:#e8e4d8;text-shadow:3px 0 #d11,-3px 0 #0cc;animation:gl 3.5s infinite}
+#title{background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.55) 50%,rgba(0,0,0,.15) 100%);z-index:30;display:none;align-items:flex-start;justify-content:center;text-align:left;padding:5vh 8% 9vh}
+#title h1{font-family:'VT323',monospace;font-size:min(11vw,17vh);line-height:.9;margin:0;letter-spacing:6px;color:#e8e4d8;text-shadow:3px 0 #d11,-3px 0 #0cc;animation:gl 3.5s infinite}
 @keyframes gl{0%,90%,100%{transform:none;text-shadow:3px 0 #d11,-3px 0 #0cc}92%{transform:translateX(-8px) skewX(8deg);text-shadow:-8px 0 #d11,8px 0 #0cc}95%{transform:translateX(6px)}}
-#title p{margin:6px 0;font-size:clamp(18px,3vw,26px);opacity:.8;max-width:760px}
-#title .osd{position:absolute;top:14px;left:18px;font-size:30px;text-shadow:0 0 6px #000}
-#title .osd2{position:absolute;bottom:14px;right:18px;font-size:26px;opacity:.85;text-shadow:0 0 6px #000}
-#title .menu{display:flex;flex-direction:column;align-items:flex-start;margin-top:16px}
-#title .menu .btn{display:inline-block;background:none;border:none;border-radius:0;font-size:clamp(26px,4.6vw,40px);padding:4px 0;margin:2px 0;letter-spacing:3px;text-align:left}
+#title p{margin:1vh 0;font-size:min(3vw,4.6vh);opacity:.8;max-width:760px}
+#title .osd{position:absolute;top:1.5vh;right:3%;font-size:min(4vw,5vh);text-shadow:0 0 6px #000}
+#title .osd2{position:absolute;bottom:1.5vh;right:3%;font-size:min(3.4vw,4.6vh);opacity:.85;text-shadow:0 0 6px #000}
+#title .menu{display:flex;flex-direction:column;align-items:flex-start;margin-top:1.5vh}
+#title .menu .btn{display:inline-block;background:none;border:none;border-radius:0;font-size:min(4.6vw,7vh);padding:.4vh 0;margin:0;letter-spacing:3px;text-align:left}
 #title .menu .btn:hover,#title .menu .btn:focus{color:#fff;text-shadow:2px 0 #d11,-2px 0 #0cc;outline:none}
 #title .menu .btn::before{content:'▶ ';opacity:0}
 #title .menu .btn:hover::before,#title .menu .btn:focus::before{opacity:1}
@@ -79,7 +85,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 #nobj{left:50%;top:44px;transform:translateX(-50%);font-size:21px;opacity:.8;display:none;white-space:nowrap;text-shadow:0 0 6px #000}
 #cams .btn.warn{animation:warn .6s infinite}
 @keyframes warn{50%{border-color:#f33;box-shadow:0 0 14px #f22;color:#f88}}
-#bJour{top:10px;right:200px}
+#bJour{top:10px;right:160px}
 #journal{background:rgba(0,0,0,.8);z-index:32}
 #jPage{background:#e9e2cc;color:#1d1d1d;width:min(880px,92%);max-height:88%;overflow:auto;padding:20px 28px;font-family:'Special Elite','Courier New',monospace;font-size:clamp(14px,2.2vw,19px);line-height:1.45;box-shadow:0 8px 40px #000;background-image:repeating-linear-gradient(transparent 0 27px,rgba(60,90,160,.18) 27px 28px);text-align:left}
 #jPage h3{font-family:'VT323',monospace;font-size:30px;margin:10px 0 2px;color:#7c1111;letter-spacing:2px}
@@ -87,8 +93,9 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 #jPage .q b{color:#7c1111}#jPage .dim{opacity:.45}
 #jPage .close{font-family:'VT323',monospace;font-size:20px;opacity:.6;text-align:right}
 #armsHint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:22px;opacity:.8;display:none;z-index:12;text-shadow:0 0 6px #000;white-space:nowrap}
-#cloud{font-size:18px;opacity:.6;margin-top:10px}
-#credit{font-size:20px;opacity:.7;margin-top:14px;letter-spacing:2px}
+#cloud{font-size:min(2.4vw,3.6vh);opacity:.6;margin-top:1vh}
+#credit{font-size:min(2.6vw,4vh);opacity:.7;margin-top:1vh;letter-spacing:2px}
+#title #cloud{position:absolute;bottom:1.5vh;left:8%}#title #credit{position:absolute;bottom:5.5vh;left:8%}
 #fail{background:#000;z-index:25;font-size:clamp(26px,5vw,44px);text-align:center;padding:30px}
 #fail small{display:block;font-size:22px;opacity:.7;margin-top:14px}
 #end{background:rgba(0,0,0,.93);z-index:28;text-align:center;padding:24px}
@@ -109,7 +116,6 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
     <div id="clock"></div><div id="camname"></div><div id="rec">● REC</div>
     <div id="lucw"><div id="luc"></div></div><div id="lucl">LUCIDITÀ</div>
     <div id="tapehud"></div><div id="cc"></div><div id="toast"></div><div id="hint"></div><div id="nobj"></div>
-    <button class="btn" id="bFull" title="Schermo intero">⛶</button>
     <button class="btn" id="bArms">Braccia [B]</button>
     <button class="btn" id="bJour">Taccuino [J]</button>
     <button class="btn" id="bUse">Interagisci</button>
@@ -126,7 +132,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
   <div class="modal" id="fail"><div id="failTxt"></div><small>NASTRO DANNEGGIATO</small></div>
   <div class="modal" id="end">
     <h2>FINE DELLA DEMO</h2>
-    <p>Notte 3 — presto.</p>
+    <p id="endNext">Notte 4 — Il videonoleggio — presto.</p>
     <p id="endStat"></p>
     <p style="margin-top:14px"><button class="btn" id="bAgain" style="display:inline-block">Ricomincia da capo</button></p>
     <div id="credit">Creato da AgonyApp Studio</div>
@@ -216,6 +222,8 @@ TX.kit=wallpaper('#c8c2a7',(g,w,h,r)=>{const top=h-125;for(let y=top;y<h-13;y+=1
 TX.bath=wallpaper('#cfd9d8',(g,w,h,r)=>{g.fillStyle='#9fb0af';for(let y=0;y<h;y+=16)g.fillRect(0,y,w,1);for(let x=0;x<w;x+=16)g.fillRect(x,0,1,h);g.fillStyle='rgba(60,90,80,.15)';for(let y=h-80;y<h-13;y+=16)for(let x=0;x<w;x+=16)g.fillRect(x+1,y+1,15,15);},16,'#8fa3a2');
 TX.stu=wallpaper('#6f6a62',null,17);
 TX.out=wallpaper('#3a3631',null,18);
+TX.cel=wallpaper('#7a766d',(g,w,h,r)=>{for(let y=0;y<h;y+=26){const o=((y/26)|0)%2?32:0;for(let x=-o;x<w;x+=64){const v=105+(r()*25|0);g.fillStyle=`rgb(${v},${v-2},${v-6})`;g.fillRect(x+1,y+1,62,24);}}g.fillStyle='rgba(0,0,0,.3)';for(let y=25;y<h;y+=26)g.fillRect(0,y,w,2);stains(g,w,h,r,6,'rgba(30,40,20,.3)');},19,'#2a2826');
+TX.concrete=ctex(128,128,(g,w,h,r)=>{g.fillStyle='#716d64';g.fillRect(0,0,w,h);dirt(g,w,h,r,2500,.18);stains(g,w,h,r,5,'rgba(20,20,10,.35)');g.strokeStyle='rgba(0,0,0,.4)';g.beginPath();g.moveTo(10,70);g.lineTo(50,64);g.lineTo(90,80);g.stroke();},29);
 const floorTex=(fn,seed)=>ctex(128,128,fn,seed);
 TX.parquet=floorTex((g,w,h,r)=>{for(let y=0;y<h;y+=16){let x=-(r()*60|0);while(x<w){const L=40+(r()*50|0);const v=60+(r()*25|0);g.fillStyle=`rgb(${v+30},${v},${v-25})`;g.fillRect(x,y,L,15);g.fillStyle='rgba(0,0,0,.35)';g.fillRect(x,y+15,L,1);g.fillRect(x+L-1,y,1,16);for(let k=0;k<4;k++){g.fillStyle='rgba(0,0,0,.08)';g.fillRect(x,y+(r()*15|0),L,1);}x+=L;}}dirt(g,w,h,r,500,.15);},21);
 TX.lino=floorTex((g,w,h,r)=>{for(let y=0;y<4;y++)for(let x=0;x<4;x++){g.fillStyle=((x+y)&1)?'#c9c2a8':'#3a3f3a';g.fillRect(x*32,y*32,32,32);}stains(g,w,h,r,4,'rgba(60,40,10,.25)');dirt(g,w,h,r,600,.15);},22);
@@ -249,7 +257,7 @@ const blueTex=new THREE.CanvasTexture(blueC);blueTex.colorSpace=THREE.SRGBColorS
 /* =============== MATERIALI =============== */
 const lam=o=>new THREE.MeshLambertMaterial(o);
 const M={
-  wall:{LIV:lam({map:TX.liv}),BED:lam({map:TX.bed}),HALL:lam({map:TX.hall}),ENT:lam({map:TX.ent}),KIT:lam({map:TX.kit}),BATH:lam({map:TX.bath}),STU:lam({map:TX.stu}),OUT:lam({map:TX.out})},
+  wall:{LIV:lam({map:TX.liv}),BED:lam({map:TX.bed}),HALL:lam({map:TX.hall}),ENT:lam({map:TX.ent}),KIT:lam({map:TX.kit}),BATH:lam({map:TX.bath}),STU:lam({map:TX.stu}),CEL:lam({map:TX.cel}),OUT:lam({map:TX.out})},
   ceil:lam({map:TX.ceil}),
   wood:lam({map:TX.wood}),woodL:lam({map:TX.woodL}),fabric:lam({map:TX.fabric}),blanket:lam({map:TX.blanket}),
   door:lam({map:TX.door}),doorD:lam({map:TX.doorD}),trim:lam({color:0xd8d0bc}),trimD:lam({color:0x3a2616}),
@@ -262,11 +270,11 @@ const M={
   red:new THREE.MeshBasicMaterial({color:0xff2020}),postit:lam({map:TX.postit,emissive:0x2a2508}),clock:lam({map:TX.clock}),
   vcr:new THREE.MeshBasicMaterial({map:vcrTex})
 };
-const FLOOR={LIV:lam({map:TX.parquet}),KIT:lam({map:TX.lino}),ENT:lam({map:TX.parquet}),HALL:lam({map:TX.parquet}),BED:lam({map:TX.carpet}),BATH:lam({map:TX.tileF}),STU:lam({map:TX.parquet})};
+const FLOOR={LIV:lam({map:TX.parquet}),KIT:lam({map:TX.lino}),ENT:lam({map:TX.parquet}),HALL:lam({map:TX.parquet}),BED:lam({map:TX.carpet}),BATH:lam({map:TX.tileF}),STU:lam({map:TX.parquet}),CEL:lam({map:TX.concrete})};
 
 /* =============== CASA =============== */
 const CEIL=2.7,TH=.14;
-const ROOMS={LIV:[0,0,6,5],KIT:[6,0,10,5],ENT:[10,0,13,5],HALL:[0,5,13,6.6],BED:[0,6.6,5,11],BATH:[5,6.6,8.5,11],STU:[8.5,6.6,13,11]};
+const ROOMS={LIV:[0,0,6,5],KIT:[6,0,10,5],ENT:[10,0,13,5],HALL:[0,5,13,6.6],BED:[0,6.6,5,11],BATH:[5,6.6,8.5,11],STU:[8.5,6.6,13,11],CEL:[14,1,20.5,9]};
 function roomAt(x,z){for(const k in ROOMS){const r=ROOMS[k];if(x>r[0]&&x<r[2]&&z>r[1]&&z<r[3])return k;}return 'OUT';}
 const colliders=[],occluders=[];
 const house=new THREE.Group();scene.add(house);
@@ -336,7 +344,7 @@ wallX(11,0,13,[[6.3,7.0,2.1,1.5]]);
 wallZ(0,0,11,[[2.2,3.6,2.2,.9],[7.6,8.8,2.2,.9]]);
 wallZ(13,0,11,[[2.0,3.0,2.15],[5.35,6.25,2.1]]);
 /* muri interni */
-wallX(5,0,13,[[2.0,3.0],[7.5,8.4],[10.8,12.2,2.3]]);
+wallX(5,0,13,[[4.5,5.4],[7.5,8.4],[10.8,12.2,2.3]]);
 wallZ(6,0,5,[[3.7,4.6]]);
 wallZ(10,0,5,[]);
 wallX(6.6,0,13,[[3.8,4.7],[6.0,6.85],[10.5,11.35]]);
@@ -350,7 +358,7 @@ function doorPanelX(z,a,b,top,mat,closed,hinge,side){
   const L=b-a,hx=hinge==='a'?a+.03:b-.03;const m=B(hx,top/2,z+side*(L/2+.02),.045,top-.02,L,mat,{col:1});sph(hx+(hinge==='a'?.05:-.05),1.0,z+side*(L-.06),.028,M.brass);return m;
 }
 function doorPanelZ(x,a,b,top,mat,side){const m=B(x,top/2,(a+b)/2,.05,top-.01,b-a,mat,{col:1,occ:1});sph(x+side*.05,1.0,b-.08,.03,M.brass);return m;}
-frameX(5,2.0,3.0,2.1,M.trim);doorPanelX(5,2.0,3.0,2.1,M.door,false,'a',-1);
+frameX(5,4.5,5.4,2.1,M.trim);
 frameX(5,7.5,8.4,2.1,M.trim);doorPanelX(5,7.5,8.4,2.1,M.door,false,'b',-1);
 frameX(5,10.8,12.2,2.3,M.trim);
 frameZ(6,3.7,4.6,2.1,M.trim);
@@ -359,7 +367,12 @@ frameX(6.6,6.0,6.85,2.1,M.trim);doorPanelX(6.6,6.0,6.85,2.1,M.door,false,'a',1);
 frameX(6.6,10.5,11.35,2.1,M.trim);doorPanelX(6.6,10.5,11.35,2.1,M.door,true,'a',-1);
 frameZ(13,2.0,3.0,2.15,M.trimD);doorPanelZ(13,2.0,3.0,2.15,M.door,-1);
 B(12.955,1.55,2.5,.02,.03,.03,M.brass); // spioncino
-frameZ(13,5.35,6.25,2.1,M.trimD);doorPanelZ(13,5.35,6.25,2.1,M.doorD,-1);
+frameZ(13,5.35,6.25,2.1,M.trimD);const cellarDoor=doorPanelZ(13,5.35,6.25,2.1,M.doorD,-1);const cellarKnob=house.children[house.children.length-1];
+const cellarDark=plane(13.06,1.05,5.8,.9,2.1,new THREE.MeshBasicMaterial({color:0x000000}),0,-Math.PI/2);cellarDark.visible=false;
+let cellarOpen=false;
+function setCellarDoor(o){if(o===cellarOpen)return;cellarOpen=o;cellarKnob.visible=!o;cellarDark.visible=o;
+  if(o){cellarDoor.rotation.y=-1.2;cellarDoor.position.set(13-.45*Math.sin(1.2),1.05,5.35+.45*Math.cos(1.2));}
+  else{cellarDoor.rotation.y=0;cellarDoor.position.set(13,1.05,5.8);}}
 B(12.93,1.35,5.5,.04,.05,.22,M.metal); // chiavistello
 /* finestre: vetro nero + veneziane */
 function windowZ(x,a,b,bot,top,side){
@@ -434,7 +447,7 @@ B(5.75,.83,1.75,.12,.06,.18,M.photo2);
 cyl(.45,.75,4.55,.015,.015,1.5,M.metal,8);cyl(.45,.02,4.55,.15,.15,.04,M.black);cyl(.45,1.55,4.55,.12,.2,.25,M.shade,16);
 // orologio fermo alle 03:12
 plane(1.9,1.9,.08,.32,.32,M.clock);
-picX(4.6,1.55,4.93,.5,.4,M.photo2,-1);picZ(.08,1.6,1.1,.35,.45,M.photo,1);
+picX(1.3,1.55,4.93,.5,.4,M.photo2,-1);picZ(.08,1.6,1.1,.35,.45,M.photo,1);
 cyl(3,2.6,2.5,.01,.01,.2,M.black,6);cyl(3,2.45,2.5,.08,.2,.16,new THREE.MeshLambertMaterial({color:0x6b5a3a,side:THREE.DoubleSide}),16);
 
 /* ---------- CUCINA ---------- */
@@ -473,9 +486,10 @@ cyl(11.5,2.55,2.5,.006,.006,.3,M.black,4);sph(11.5,2.38,2.5,.05,M.bulb);
 picX(11.5,1.5,.08,.4,.5,M.photo,1);
 
 /* ---------- CORRIDOIO ---------- */
-plane(6.5,.005,5.8,11.5,.8,M.rug,-Math.PI/2);
+TX.runner=ctex(64,64,(g,w,h,r)=>{g.fillStyle='#5a1a17';g.fillRect(0,0,w,h);g.fillStyle='#c6a05a';g.fillRect(0,4,w,3);g.fillRect(0,h-7,w,3);g.fillStyle='#1d2a40';g.fillRect(0,10,w,3);g.fillRect(0,h-13,w,3);g.fillStyle='#1d2a40';g.beginPath();g.moveTo(32,18);g.lineTo(50,32);g.lineTo(32,46);g.lineTo(14,32);g.closePath();g.fill();g.fillStyle='#c6a05a';g.beginPath();g.moveTo(32,25);g.lineTo(40,32);g.lineTo(32,39);g.lineTo(24,32);g.closePath();g.fill();dirt(g,w,h,r,500,.25);},43);
+{const geo=new THREE.PlaneGeometry(11.2,.8);const uv=geo.attributes.uv;for(let i=0;i<uv.count;i++)uv.setX(i,uv.getX(i)*14);const m=new THREE.Mesh(geo,lam({map:TX.runner}));m.rotation.x=-Math.PI/2;m.position.set(6.5,.005,5.8);house.add(m);}
 B(9.2,.4,6.4,.9,.8,.32,M.wood,{col:1,occ:1});cyl(9.4,.95,6.4,.07,.1,.25,M.shade,10);
-picX(5.2,1.55,5.08,.35,.45,M.photo,1);picX(1.2,1.55,6.52,.45,.35,M.photo2,-1);picX(12.0,1.55,6.52,.35,.45,M.photo,-1);
+picX(6.6,1.55,5.08,.35,.45,M.photo,1);picX(1.2,1.55,6.52,.45,.35,M.photo2,-1);picX(12.0,1.55,6.52,.35,.45,M.photo,-1);
 sph(3,2.6,5.8,.08,M.bulb);sph(10,2.6,5.8,.08,M.bulb);
 
 /* ---------- CAMERA DA LETTO ---------- */
@@ -512,6 +526,44 @@ B(7.33,.28,10.58,2.2,.56,.7,M.porcelain,{col:1,occ:1});plane(7.33,.5,10.58,2.0,.
 plane(6.8,1.25,10.2,1.2,1.7,M.shower,0,0);cyl(7.3,2.1,10.2,.01,.01,2.2,M.metal,6).rotation.z=Math.PI/2;
 B(6.8,2.66,8.6,.4,.04,.4,M.neon);
 
+/* ---------- CANTINA (sotto la casa: si raggiunge dalle scale) ---------- */
+wallX(1,14,20.5,[]);wallX(9,14,20.5,[]);wallZ(14,1,9,[]);wallZ(20.5,1,9,[]);
+{const geo=new THREE.PlaneGeometry(6.5,8);geo.rotateX(Math.PI/2);uvWorld(geo,17.25,CEIL,5,2,2);const m=new THREE.Mesh(geo,lam({map:TX.concrete}));m.position.set(17.25,CEIL,5);house.add(m);}
+// scale che salgono verso la casa
+for(let k=0;k<7;k++){const x0=15.2-(k+1)*.16,h=(k+1)*.33;B((x0+14.07)/2,h/2,4.9,15.2-(k)*.16-14.07,h,1.0,lam({map:TX.concrete}),{tile:.8});}
+colliders.push([14.0,4.35,15.25,5.45]);B(15.3,1.0,4.38,.04,.04,1.0,M.metal).rotation.x=0;
+// tubi sul soffitto
+for(const z of [2.2,2.4])cyl(17.25,2.55,z,.04,.04,6.4,M.metal,8).rotation.z=Math.PI/2;
+// scatolone del videonoleggio
+B(15.45,.25,8.35,.6,.5,.45,lam({color:0x8a6a42}),{col:1});for(let i=0;i<5;i++)B(15.3+i*.07,.52,8.3+rr(-.05,.05),.03,.06,.18,M.black).rotation.y=rr(-.3,.3);
+plane(15.45,.3,8.12,.4,.12,lam({map:ctex(64,20,(g,w,h)=>{g.fillStyle='#8a6a42';g.fillRect(0,0,w,h);g.fillStyle='#222';g.font='bold 8px monospace';g.fillText('VIDEONOL. STELLA',2,9);g.fillText('RESI',24,18);},41)}),0,Math.PI);
+// scritta rossa sul muro
+const wallTxt=ctex(512,200,(g,w,h,r)=>{g.clearRect(0,0,w,h);g.fillStyle='rgba(150,10,10,.92)';g.font="bold 46px 'Rock Salt','Comic Sans MS',cursive";g.textAlign='center';
+  g.save();g.rotate(-.03);g.fillText('SETTE NOTTI. SETTE NASTRI.',w/2,70);g.font="bold 38px 'Rock Salt','Comic Sans MS',cursive";g.fillText('NON USCIRE PRIMA DELLA SETTIMA',w/2,140);g.restore();
+  for(let i=0;i<40;i++){const x=40+r()*430,y=50+r()*100;g.fillRect(x,y,3,10+r()*40);}},42);
+wallTxt.magFilter=THREE.LinearFilter;
+plane(17.3,1.55,1.08,3.2,1.25,new THREE.MeshLambertMaterial({map:wallTxt,transparent:true}),0,0);
+// le sette TV
+const CTV=[];
+const ctvRT=[0,1,2].map(()=>{const t=new THREE.WebGLRenderTarget(256,192);t.texture.colorSpace=THREE.SRGBColorSpace;return t;});
+for(let i=0;i<7;i++){
+  const x=19.75-.5*Math.sin(Math.PI*i/6),z=1.95+i*.86,y0=i%2?.62:.36;
+  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=Math.atan2(16.6-x,5-z);house.add(g);
+  B(0,y0/2,0,.62,y0,.6,lam({map:TX.woodL}),{parent:g});
+  B(0,y0+.21,0,.52,.42,.46,M.plastic,{parent:g});B(0,y0+.2,-.28,.36,.3,.16,M.plastic,{parent:g});
+  const uni={map:{value:blueTex},time:{value:0},mode:{value:0},glitch:{value:0}};
+  const mat=new THREE.ShaderMaterial({uniforms:uni,vertexShader:tvMat.vertexShader,fragmentShader:tvMat.fragmentShader});
+  plane(-.04,y0+.22,.231,.38,.29,mat,0,0,g);
+  B(.21,y0+.22,.232,.06,.3,.005,M.black,{parent:g});
+  const lbl=ctex(96,24,(gg,w,h)=>{gg.fillStyle='#e6dfc8';gg.fillRect(0,0,w,h);gg.fillStyle=i===6?'#8a1c1c':'#222';gg.font='bold 11px monospace';gg.fillText(i===6?'7 — NASTRO ZERO':'NOTTE '+(i+1),6,16);},50+i,false);
+  plane(0,y0-.1,.302,.3,.075,lam({map:lbl}),0,0,g);
+  colliders.push([x-.36,z-.36,x+.36,z+.36]);
+  const dx=16.6-x,dz=5-z,l=Math.hypot(dx,dz);
+  CTV.push({uni,mode:0,x,z,zx:x+dx/l*.85,zz:z+dz/l*.85});
+}
+const cellarTvLight=new THREE.PointLight(0x9fb4ff,0,6,1.4);cellarTvLight.position.set(18.6,1.0,4.9);scene.add(cellarTvLight);
+cyl(17.2,2.6,4.9,.006,.006,.2,M.black,4);sph(17.2,2.47,4.9,.05,M.bulb);
+
 /* ---------- STUDIO (chiuso) ---------- */
 B(11,.4,9,1.2,.8,.6,M.wood,{col:1});
 
@@ -522,7 +574,8 @@ const CAMS=[
   {n:'CAM 3 — SALOTTO',p:[5.8,2.42,4.8],t:[1.6,.7,1.4]},
   {n:'CAM 4 — CUCINA',p:[6.3,2.45,.5],t:[9.2,.7,3.6]},
   {n:'CAM 5 — BAGNO',p:[5.2,2.42,6.85],t:[8.2,.9,9.5]},
-  {n:'CAM 6 — INGRESSO',p:[10.2,2.42,4.8],t:[12.9,.9,1.8]}];
+  {n:'CAM 6 — INGRESSO',p:[10.2,2.42,4.8],t:[12.9,.9,1.8]},
+  {n:'CAM 7 — CANTINA',p:[15.3,2.3,8.2],t:[19.4,.6,4.7]}];
 CAMS.forEach((c,i)=>{if(i===3)return;const g=new THREE.Group();g.position.set(c.p[0],c.p[1],c.p[2]);B(0,0,0,.12,.08,.16,M.black,{parent:g});B(0,.035,.07,.012,.012,.01,M.red,{parent:g});scene.add(g);g.lookAt(c.t[0],c.t[1],c.t[2]);});
 
 /* =============== LUCI =============== */
@@ -536,31 +589,83 @@ addLight(11.5,2.3,2.5,0xffe2b0,3,6,'ENT');
 addLight(6.5,2.45,5.8,0xffd59a,3.5,9,'HALL');
 addLight(3.35,.95,10.6,0xff9a50,2.6,6,'BED');
 addLight(6.8,2.5,8.6,0xe0f0ff,3.6,6,'BATH',.3);
-const irLight=new THREE.PointLight(0xffffff,0,11,1.2);scene.add(irLight);
+addLight(17.2,2.3,4.9,0xffd9a0,5,9,'CEL',.4);
+const irLight=new THREE.PointLight(0xffffff,0,14,1.1);scene.add(irLight);
 const tvLight=new THREE.PointLight(0xb0c4ff,0,5,1.6);tvLight.position.set(TVX,.9,1.2);scene.add(tvLight);
 
 /* =============== PERSONAGGI =============== */
 function human(kind){
-  const P={you:{skin:0xd9b08c,shirt:0x39424f,pants:0x23262e,hair:0x2a1d14,s:1,th:1},
-    dop:{skin:0xb7b0a4,shirt:0x1b1d22,pants:0x111216,hair:0x0c0c0c,s:1,th:1,eyes:1},
-    ent:{skin:0x1a1a1a,shirt:0x141414,pants:0x121212,hair:0x0a0a0a,s:1.24,th:.72,eyes:1,arm:1.35}}[kind];
-  const g=new THREE.Group();const s=P.s,th=P.th;
-  const sk=lam({color:P.skin}),sh=lam({color:P.shirt}),pa=lam({color:P.pants}),ha=lam({color:P.hair});
-  const cap=(r,l,mat,x,y,z)=>{const m=new THREE.Mesh(new THREE.CapsuleGeometry(r,l,4,10),mat);m.position.set(x,y,z);g.add(m);return m;};
-  cap(.075*th,.7*s,pa,-.1*th,.45*s,0);cap(.075*th,.7*s,pa,.1*th,.45*s,0);
-  const t=cap(.17*th,.36*s,sh,0,1.16*s,0);t.scale.z=.62;
-  const al=.52*s*(P.arm||1);
-  const a1=cap(.05*th,al,sh,-.235*th,1.2*s-al/2+.05,0),a2=cap(.05*th,al,sh,.235*th,1.2*s-al/2+.05,0);
-  a1.rotation.z=-.06;a2.rotation.z=.06;
-  sph(-.235*th,1.2*s-al,0,.05,sk,g);sph(.235*th,1.2*s-al,0,.05,sk,g);
-  cap(.045,.06,sk,0,1.46*s,0);
-  const hd=sph(0,1.6*s,0,.11,sk,g);hd.scale.set(.92,1.08,1);
-  const hr=sph(0,1.64*s,-.015,.115,ha,g);hr.scale.set(.95,.9,1);
-  B(-.1*th,.04,.04,.09,.08,.24,lam({color:0x151515}),{parent:g});B(.1*th,.04,.04,.09,.08,.24,lam({color:0x151515}),{parent:g});
-  if(P.eyes){const e=new THREE.MeshBasicMaterial({color:0xffffff});sph(-.036,1.61*s,.1,.016,e,g);sph(.036,1.61*s,.1,.016,e,g);}
-  else{const e=lam({color:0x111111});sph(-.036,1.61*s,.1,.01,e,g);sph(.036,1.61*s,.1,.01,e,g);}
-  g.userData.h=1.6*s;
+  const P={you:{skin:0xd2a582,shirt:0x3b4656,sleeve:0x3b4656,pants:0x2a2d36,hair:0x2a1d14,shoe:0x1a1612,s:1,th:1},
+    dop:{skin:0xb3aca0,shirt:0x1d1f24,sleeve:0x1d1f24,pants:0x141518,hair:0x0c0c0c,shoe:0x0c0c0c,s:1,th:1,eyes:1},
+    ent:{skin:0x161616,shirt:0x101010,sleeve:0x101010,pants:0x0e0e0e,hair:0x090909,shoe:0x090909,s:1.24,th:.7,eyes:1,arm:1.4}}[kind];
+  const g=new THREE.Group();const s=P.s,th=P.th,al=P.arm||1;
+  const sk=lam({color:P.skin}),sh=lam({color:P.shirt}),sl=lam({color:P.sleeve}),pa=lam({color:P.pants}),ha=lam({color:P.hair}),so=lam({color:P.shoe});
+  const cap=(r,l,mat)=>new THREE.Mesh(new THREE.CapsuleGeometry(r,l,5,12),mat);
+  const J={};
+  const hips=new THREE.Group();hips.position.y=.93*s;g.add(hips);J.hips=hips;
+  const pelvis=new THREE.Mesh(new THREE.SphereGeometry(.15*th,14,10),pa);pelvis.scale.set(1.05,.62,.74);hips.add(pelvis);
+  const torso=new THREE.Group();hips.add(torso);J.torso=torso;
+  const prof=[[.001,-.02],[.135,0],[.145,.1],[.142,.2],[.158,.32],[.172,.41],[.15,.48],[.08,.53],[.001,.54]].map(([r,y])=>new THREE.Vector2(r*th,y*s));
+  const tm=new THREE.Mesh(new THREE.LatheGeometry(prof,16),sh);tm.scale.z=.66;torso.add(tm);
+  const neck=cap(.045,.07*s,sk);neck.position.y=.57*s;torso.add(neck);
+  const head=new THREE.Group();head.position.y=.69*s;torso.add(head);J.head=head;
+  const skull=new THREE.Mesh(new THREE.SphereGeometry(.102,18,14),sk);skull.scale.set(.88,1.1,.98);head.add(skull);
+  const jaw=new THREE.Mesh(new THREE.SphereGeometry(.075,14,10),sk);jaw.position.set(0,-.055,.022);jaw.scale.set(.92,.8,1);head.add(jaw);
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(.108,18,12,0,Math.PI*2,0,Math.PI*.52),ha);hair.position.set(0,.018,-.008);hair.rotation.x=-.3;head.add(hair);
+  const nose=new THREE.Mesh(new THREE.BoxGeometry(.018,.035,.025),sk);nose.position.set(0,-.005,.1);head.add(nose);
+  for(const sx of[-1,1]){const ear=new THREE.Mesh(new THREE.SphereGeometry(.02,8,6),sk);ear.position.set(sx*.09,0,0);ear.scale.set(.5,1,.8);head.add(ear);}
+  if(P.eyes){const e=new THREE.MeshBasicMaterial({color:0xffffff});for(const sx of[-1,1]){const m=new THREE.Mesh(new THREE.SphereGeometry(.014,8,6),e);m.position.set(sx*.034,.012,.088);head.add(m);}}
+  else{const e=lam({color:0x0d0d0d}),w=lam({color:0xe8e4dc});for(const sx of[-1,1]){const m=new THREE.Mesh(new THREE.SphereGeometry(.013,8,6),w);m.position.set(sx*.034,.012,.085);head.add(m);const pu=new THREE.Mesh(new THREE.SphereGeometry(.007,6,5),e);pu.position.set(sx*.034,.012,.097);head.add(pu);}
+    const brow=new THREE.Mesh(new THREE.BoxGeometry(.11,.012,.02),ha);brow.position.set(0,.04,.088);head.add(brow);}
+  for(const [k,sx] of [['L',-1],['R',1]]){
+    const thigh=new THREE.Group();thigh.position.set(sx*.085*th,-.02,0);hips.add(thigh);
+    const t=cap(.068*th,.34*s,pa);t.position.y=-.21*s;thigh.add(t);
+    const knee=new THREE.Group();knee.position.y=-.43*s;thigh.add(knee);
+    const sn=cap(.054*th,.34*s,pa);sn.position.y=-.21*s;knee.add(sn);
+    const foot=new THREE.Mesh(new THREE.BoxGeometry(.085,.06,.23),so);foot.position.set(0,-.46*s+.03,.045);knee.add(foot);
+    J['thigh'+k]=thigh;J['knee'+k]=knee;
+    const shd=new THREE.Group();shd.position.set(sx*.205*th,.47*s,0);torso.add(shd);
+    const ball=new THREE.Mesh(new THREE.SphereGeometry(.058*th,10,8),sh);shd.add(ball);
+    const up=cap(.046*th,.22*s*al,sl);up.position.y=-.15*s*al;shd.add(up);
+    const el=new THREE.Group();el.position.y=-.3*s*al;shd.add(el);
+    const fo=cap(.04*th,.2*s*al,kind==='you'?sk:sl);fo.position.y=-.14*s*al;el.add(fo);
+    const hand=new THREE.Group();hand.position.y=-.29*s*al;el.add(hand);
+    const palm=new THREE.Mesh(new THREE.BoxGeometry(.05,.075,.024),sk);palm.position.y=-.03;hand.add(palm);
+    const nf=kind==='ent'?4:4,fl=kind==='ent'?.09:.045;
+    for(let i=0;i<nf;i++){const f=cap(.0075,fl,sk);f.position.set(-.018+i*.012,-.075-fl/2,0);f.rotation.x=kind==='ent'?-.25:.15;hand.add(f);}
+    shd.rotation.z=sx*.07;
+    J['sh'+k]=shd;J['el'+k]=el;
+  }
+  g.userData={h:1.6*s,J,ph:Math.random()*6,kind,w:0,hy:.93*s,tw:0};
   return g;
+}
+/* animazione: camminata, respiro, e per l'Entità scatti innaturali */
+let DT=.016;
+function animH(g,dt,v){
+  const u=g.userData,J=u.J;if(!J)return;
+  u.w=lerp(u.w,clamp(v/1.1,0,1),Math.min(1,dt*7));const w=u.w,ent=u.kind==='ent';
+  u.ph+=dt*(ent?3.2:4.2+v*4);const a=Math.sin(u.ph),t=performance.now()/1000;
+  const sw=ent?.42:.55;
+  J.thighL.rotation.x=-a*sw*w;J.thighR.rotation.x=a*sw*w;
+  J.kneeL.rotation.x=Math.max(0,a)*.95*w+.04;J.kneeR.rotation.x=Math.max(0,-a)*.95*w+.04;
+  J.hips.position.y=u.hy-Math.abs(Math.cos(u.ph))*.022*w;
+  const br=Math.sin(t*1.6+u.ph)*.012;
+  J.torso.rotation.x=(ent?.12:.05)*w+br;
+  if(ent){
+    J.shL.rotation.x=-.18+Math.sin(t*.9)*.05;J.shR.rotation.x=-.12+Math.sin(t*.8+1)*.05;
+    J.elL.rotation.x=-.15;J.elR.rotation.x=-.25;
+    if(Math.random()<dt*1.4)u.tw=(Math.random()-.5)*.9;
+    J.head.rotation.z=lerp(J.head.rotation.z,u.tw,.35);J.head.rotation.x=.18;
+  }else{
+    J.shL.rotation.x=a*.45*w;J.shR.rotation.x=-a*.45*w;
+    J.elL.rotation.x=-.15-.25*w;J.elR.rotation.x=-.15-.25*w;
+    J.head.rotation.y=Math.sin(t*.6+u.ph)*.12*(1-w);J.head.rotation.x=br*2;
+  }
+}
+function moveA(g,x,z,jit){
+  const u=g.userData;let v=0;
+  if(u.lx!==undefined)v=Math.hypot(x-u.lx,z-u.lz)/Math.max(DT,.001);
+  u.lx=x;u.lz=z;g.position.set(x+(jit||0),0,z);animH(g,DT,Math.min(v,3));
 }
 const ACT={you:human('you'),dop:human('dop'),ent:human('ent'),ent2:human('ent'),walkerYou:human('you'),walkerDop:human('dop'),decoyE:human('ent'),decoyD:human('dop'),amb:human('ent'),failE:human('ent'),scare:human('ent')};
 for(const k in ACT){ACT[k].visible=false;scene.add(ACT[k]);}
@@ -699,6 +804,12 @@ const DEF_TAPES={
     glitch:[16.1,17.1,17.5,18.6,20.2],scare:20.3,cut:[20.45,26],
     cc:[[1,'[passi sul pavimento]'],[8,'[il frigo ronza]'],[14,'[un respiro. Non è il tuo]'],[19,'[...]'],[21,'[ti sei voltato?]']],
     after:['Alle 03:12, in cucina, qualcosa sta dietro di te.','Quello al frigo sei tu. Non ti sei voltato.','La ripresa viene dall\'alto, da un angolo della cucina. Vai a cercare la telecamera.']},
+  t3:{title:'CORRIDOIO 03:33',clock:12780,dur:27,cam:{p:[.2,2.42,5.8],t:[13,.8,5.8],fov:70},light:'',doorOpen:13.5,
+    actors:[{k:'you',face:'move',keys:[[0,4.25,6.45],[3,4.25,6.45],[4.5,4.25,5.8],[13,12.3,5.8],[16,13.1,5.8]],vis:[[3,15.6]]},
+            {k:'ent',face:'cam',keys:[[0,12.75,5.8],[20.6,12.75,5.8],[22,1.6,5.8]],vis:[[18,19.2],[19.8,20.4],[21,22.2]]}],
+    glitch:[13.5,18,19.8,21],scare:21.9,cut:[22.2,27],
+    cc:[[1,'[silenzio]'],[5,'[passi scalzi]'],[13.5,'[un chiavistello si apre da solo]'],[16.5,'[scale che scendono]'],[19,'[sette televisori accesi]']],
+    after:['Alle 03:33 il tuo corpo attraversa il corridoio, e la cantina si apre da sola.','Tu scendi. Dalle scale sale una luce azzurra, come di televisori accesi.','La porta della cantina adesso è socchiusa.']},
   t2:{title:'BAGNO 02:05',clock:7500,dur:31,cam:{p:[5.2,2.42,6.85],t:[8.2,.95,9.3],fov:76},light:'BATH',
     actors:[{k:'you',face:[8.6,8.45],keys:[[0,7.85,8.45],[31,7.85,8.45]],vis:[[0,25.2]]},
             {k:'dop',face:'move',keys:[[0,6.2,10.0],[18,6.9,9.2],[25,7.45,8.7],[25.9,5.7,7.3]],vis:[[7,25.95]]}],
@@ -711,9 +822,12 @@ const NOTES={
   n1:{s:'b',t:'ALLE TRE DEVI\nESSERE A LETTO.\nSEMPRE.\n— io'},
   n2:{s:'b',t:'NON FIDARTI\nDEI NASTRI.\nLI MANDA LUI.\n— io'},
   n3:{s:'b',t:'LA PORTA D\'INGRESSO\nNON SI APRE.\nNON PROVARCI.\n— io'},
-  t1:{s:'a',t:'CUCINA 03:12\n\nGUARDA DIETRO DI TE\n\nSCAPPA'},
+  t1:{s:'v',t:'CUCINA 03:12\n\nGUARDA DIETRO DI TE\n\nSCAPPA'},
   pol1:{s:'a',t:'(sul retro della polaroid)\n\nI POST-IT NON LI SCRIVO IO.\n\nSIAMO IN DUE.'},
-  t2:{s:'a',t:'BAGNO 02:05\n\nTU PARLI ALLO SPECCHIO\n\nNON ASCOLTARTI'},
+  t2:{s:'v',t:'BAGNO 02:05\n\nTU PARLI ALLO SPECCHIO\n\nNON ASCOLTARTI'},
+  t3:{s:'v',t:'TU, MENTRE LEGGI QUESTO\n\n(sul retro, ancora più storto)\nSCENDI. CONTA GLI SCHERMI.\nPRIMA CHE LO FACCIA LUI.'},
+  n7:{s:'b',t:'NON SCENDERE.\nLÀ SOTTO CI SONO\nLE NOTTI CHE HAI\nGIÀ VISSUTO.\n— io'},
+  istr3:{s:'a',t:'(un foglio nuovo, la scrittura trema)\n\nCAM 7: LA CANTINA.\nLE TV SI ACCENDONO DA SOLE.\nSE SI ACCENDONO TUTTE E SETTE\nTI VEDE DA OGNI PARTE.\n\nGUARDALE E SI SPENGONO.\nMA NON GUARDARE SOLO LORO.'},
   n4:{s:'b',t:'SE TI VEDI DORMIRE,\nNON SVEGLIARTI.\n— io'},
   n5:{s:'b',t:'LO SPECCHIO MENTE.\nCONTROLLA I TATUAGGI.\n— io'},
   istr:{s:'a',t:'(scotch sul monitor, inchiostro rosso)\n\nQUANDO DORMI SEI DENTRO IL NASTRO.\nVEDI SOLO DALLE TELECAMERE.\n\nLUI SI MUOVE SOLO SE NESSUNO GUARDA.\nGUARDALO E SI FERMA.\nMA OGNI SGUARDO LO NUTRE.\n\nRESISTI FINO ALLE 6.'},
@@ -721,11 +835,12 @@ const NOTES={
   n6:{s:'f',t:'LA CHIAVE È NEL VASO\nDEL SALOTTO.\nESCI PRIMA DELLE 3.\n— io'}
 };
 const DEATH_TAT=['NON GUARDARLO IN FACCIA','CONTA I PASSI DEL SONNAMBULO','NON FIDARTI DI TE','LA CASA RICORDA'];
-const FAIL_TXT={ent:'Qualcuno era già accanto al letto.',luc:'Hai guardato troppo. La mente cede.',door:'La porta si apre. Fuori non c\'è mai stato niente.',ent2:'Non lo hai guardato abbastanza. Ti ha trovato.'};
+const FAIL_TXT={ent:'Qualcuno era già accanto al letto.',luc:'Hai guardato troppo. La mente cede.',door:'La porta si apre. Fuori non c\'è mai stato niente.',ent2:'Non lo hai guardato abbastanza. Ti ha trovato.',tv:'Sette schermi accesi. Ti guardavano tutti.',cellar:'Sei sceso in cantina. Le TV ti stavano aspettando.'};
 const E2={0:[[4.6,10.6],[3.9,9.9]],1:[[11,5.8],[2.2,5.8]],2:[[.8,.9],[2.3,2.5]],3:[[9.6,3.7],[7.4,2.0]]};
-const WALK=[[3.3,9.6],[3.9,7.8],[4.15,6.9],[4.25,5.8],[11.5,5.8],[11.5,4.0],[12.45,2.5]];
-let WALKLEN=0;const WSEG=[];for(let i=1;i<WALK.length;i++){const l=Math.hypot(WALK[i][0]-WALK[i-1][0],WALK[i][1]-WALK[i-1][1]);WSEG.push(l);WALKLEN+=l;}
-function walkPos(q){let d=clamp(q,0,1)*WALKLEN;for(let i=0;i<WSEG.length;i++){if(d<=WSEG[i]){const u=d/WSEG[i];return[lerp(WALK[i][0],WALK[i+1][0],u),lerp(WALK[i][1],WALK[i+1][1],u)];}d-=WSEG[i];}return WALK[WALK.length-1];}
+function mkPath(P){let L=0;const S=[];for(let i=1;i<P.length;i++){const l=Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]);S.push(l);L+=l;}return{P,S,L};}
+const WALK1=mkPath([[3.3,9.6],[3.9,7.8],[4.15,6.9],[4.25,5.8],[11.5,5.8],[11.5,4.0],[12.45,2.5]]);
+const WALK3=mkPath([[3.3,9.6],[3.9,7.8],[4.15,6.9],[4.25,5.8],[12.5,5.8]]);
+function walkPos(q,W){W=W||(N&&N.walkP)||WALK1;const P=W.P;let d=clamp(q,0,1)*W.L;for(let i=0;i<W.S.length;i++){if(d<=W.S[i]){const u=d/W.S[i];return[lerp(P[i][0],P[i+1][0],u),lerp(P[i][1],P[i+1][1],u)];}d-=W.S[i];}return P[P.length-1];}
 const SOFA=[3,2.85,-Math.PI/2];
 
 /* =============== STATO =============== */
@@ -766,7 +881,10 @@ function advanceText(){
 }
 function showNote(key,cb){
   lockMode();modal='note';noteCb=cb||null;const n=NOTES[key];
-  const pe=$('paper');pe.className=n.s;pe.textContent=n.t;$('note').style.display='flex';sfx.click();
+  const pe=$('paper');pe.className=n.s;
+  if(n.s==='v'){pe.innerHTML='<div class="vb"><div class="lbl"></div><div class="win"><div class="reel"></div><div class="reel"></div></div><div class="vh">VHS · E-180</div></div>';pe.querySelector('.lbl').textContent=n.t;}
+  else pe.textContent=n.t;
+  $('note').style.display='flex';sfx.click();
 }
 /* braccia vere in 3D, attaccate alla telecamera; i tatuaggi sono scritti a penna sulla pelle */
 scene.add(pcam);
@@ -783,7 +901,8 @@ function skinTex(lines){
     const fs=Math.max(40,Math.min(96,1500/Math.max(6,s.length)));
     g.font=`${fs}px 'Reenie Beanie','Comic Sans MS',cursive`;
     g.save();g.translate(0,(i-(lines.length-1)/2)*96);g.rotate((r()-.5)*.06);
-    g.fillStyle='rgba(15,22,48,.25)';g.fillText(s,2,3);g.fillStyle='rgba(18,26,58,.93)';g.fillText(s,0,0);
+    const blue=s[0]==='§';if(blue)s=s.slice(1);
+    g.fillStyle=blue?'rgba(20,40,140,.25)':'rgba(15,22,48,.25)';g.fillText(s,2,3);g.fillStyle=blue?'rgba(25,55,190,.95)':'rgba(18,26,58,.93)';g.fillText(s,0,0);
     g.restore();
   });
   g.restore();
@@ -811,7 +930,7 @@ function openArms(){
   $('armsHint').textContent=t.length?'Le tue braccia — tocca per chiudere':'Pelle pulita. Per ora. — tocca per chiudere';$('armsHint').style.display='block';
   sfx.click();
 }
-function closeArms(){if(mode!=='arms')return;mode='day';armsG.visible=false;armLight.intensity=0;$('armsHint').style.display='none';$('cross').style.display='block';}
+function closeArms(){if(mode!=='arms')return;mode='day';armsG.visible=false;armLight.intensity=0;$('armsHint').style.display='none';$('cross').style.display='block';if(armsAfter){const f=armsAfter;armsAfter=null;f();}}
 function updateArms(dt,ts){
   armsT+=dt;const u=ease(clamp(armsT/.45,0,1));
   armsG.position.set(Math.sin(ts/900)*.004,lerp(-.45,0,u)+Math.sin(ts/700)*.003,0);
@@ -840,7 +959,14 @@ const CLUES=[
  {f:'seen_vase',t:'Nel vaso non c\'era nessuna chiave. Solo acqua nera. Il post-it blu mentiva.'},
  {f:'got_t2',t:'Nastro 2, inchiostro rosso: «Bagno 02:05 — Tu parli allo specchio — Non ascoltarti».'},
  {f:'seenT2',t:'Nel nastro 2 sei fermo davanti allo specchio. Qualcuno con la tua faccia si muove dietro di te.'},
- {f:'mirror2',t:'Nello specchio c\'è un tatuaggio che sul tuo braccio non c\'è: «Quello nello specchio aspetta».'}
+ {f:'mirror2',t:'Nello specchio c\'è un tatuaggio che sul tuo braccio non c\'è: «Quello nello specchio aspetta».'},
+ {f:'got_t3',t:'Nastro 3, inchiostro rosso: «Tu, mentre leggi questo». Sul retro: «Scendi. Conta gli schermi. Prima che lo faccia lui».'},
+ {f:'seenT3',t:'Nel nastro 3 il tuo corpo scende in cantina alle 03:33. La porta si apre da sola.'},
+ {f:'read_n7',t:'Post-it giallo (porta della cantina): «Non scendere. Là sotto ci sono le notti che hai già vissuto». A matita, ordinato.'},
+ {f:'seen_wall',t:'Sul muro della cantina, in rosso: «Sette notti. Sette nastri. Non uscire prima della settima».'},
+ {f:'seen_box',t:'Uno scatolone del Videonoleggio Stella: decine di cassette senza etichetta, tutte datate 02-11-1998.'},
+ {f:'cel_done',t:'Sette TV in cantina, una per notte. Le prime due mostrano notti già passate. La terza mostra te, adesso, in ritardo di un istante. La settima si chiama «Nastro Zero».'},
+ {f:'blue_tat',t:'Una scritta nuova sul braccio, ma in inchiostro BLU: «Esci. La porta è aperta». Non l\'hai scritta tu. Come il post-it del vaso.'}
 ];
 const QUESTIONS=[
  {q:'Chi sono?',a:F=>F.seen_bill?'Una «D.» su una bolletta. Il resto del nome è grattato via. Da chi?':null},
@@ -848,7 +974,9 @@ const QUESTIONS=[
  {q:'Chi scrive in rosso?',a:F=>F.got_cam?'Qualcuno che mi avverte. Ha fretta. Ogni volta scrive peggio.':null},
  {q:'Chi mi riprende?',a:F=>F.got_cam?'Ci sono telecamere nascoste. Qualcuno le ha messe apposta.':null},
  {q:'Perché non posso uscire?',a:F=>F.seen_window?'Fuori non c\'è niente. Forse non c\'è mai stato.':null},
- {q:'Di chi posso fidarmi?',a:F=>F.seen_vase?'Non di tutti i post-it. Uno era blu, e mentiva.':null}
+ {q:'Di chi posso fidarmi?',a:F=>F.blue_tat?'Non di ciò che è scritto in blu. Il post-it del vaso mentiva. E ora il blu è sul mio braccio.':(F.seen_vase?'Non di tutti i post-it. Uno era blu, e mentiva.':null)},
+ {q:'Cosa c\'è in cantina?',a:F=>F.cel_done?'Sette TV. Una per ogni notte. Sulla terza c\'ero io, in diretta.':null},
+ {q:'Perché sette notti?',a:F=>F.seen_wall?'«Non uscire prima della settima». Cosa succede alla settima?':null}
 ];
 function openJournal(how){
   const F=G.flags;let h='';
@@ -863,7 +991,7 @@ function openJournal(how){
     const cl=CLUES.filter(c=>F[c.f]);
     h+=`<h3>INDIZI (${cl.length})</h3>`+(cl.length?'<ul>'+cl.map(c=>'<li>'+c.t+'</li>').join('')+'</ul>':'<p class="dim">Ancora niente. Guardati intorno.</p>');
     h+='<h3>DOMANDE</h3><ul>'+QUESTIONS.map(q=>{const a=q.a(F);return `<li class="q"><b>${q.q}</b> ${a?a:'<span class="dim">…</span>'}</li>`;}).join('')+'</ul>';
-    if(G.tattoos.length)h+='<h3>SUL BRACCIO</h3><ul>'+G.tattoos.map(t=>'<li>«'+t+'»</li>').join('')+'</ul>';
+    if(G.tattoos.length)h+='<h3>SUL BRACCIO</h3><ul>'+G.tattoos.map(t=>t[0]==='§'?'<li>«'+t.slice(1)+'» <i>(inchiostro blu)</i></li>':'<li>«'+t+'»</li>').join('')+'</ul>';
   }
   h+='<div class="close">tocca per chiudere</div>';
   $('jPage').innerHTML=h;lockMode();modal='journal';$('journal').style.display='flex';sfx.click();
@@ -872,7 +1000,7 @@ $('journal').addEventListener('click',()=>{if(modal==='journal')closeModal();});
 function openMirror(after){
   lockMode();modal='mirror';modalCb=after||null;const f=$('mirFrame');f.textContent='';
   const t=G.tattoos.length?G.tattoos:['(niente)'];
-  t.forEach(s=>{const d=document.createElement('div');d.className='ink';d.textContent=s;f.appendChild(d);});
+  t.forEach(s=>{const d=document.createElement('div');d.className='ink';d.textContent=s.replace(/^§/,'');if(s[0]==='§')d.style.color='#1f3fbf';f.appendChild(d);});
   $('mirrorView').style.display='flex';
 }
 function closeModal(){
@@ -902,7 +1030,7 @@ addEventListener('keydown',e=>{
   else if(e.code==='Space'){if(modal)modalTap();else wake();}
   else if(e.code==='KeyB')openArms();
   else if(e.code==='KeyF')goFull();
-  else{const m=/^Digit([1-6])$/.exec(e.code);if(m)selCam(+m[1]-1);}
+  else{const m=/^Digit([1-7])$/.exec(e.code);if(m)selCam(+m[1]-1);}
 });
 addEventListener('keyup',e=>{keys[e.code]=false;});
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false;});
@@ -932,7 +1060,7 @@ function pend(e){
   if(e.pointerId===lookId)lookId=null;
 }
 addEventListener('pointerup',pend);addEventListener('pointercancel',pend);
-$('bFull').onclick=goFull;$('bArms').onclick=()=>{if(mode==='arms')closeArms();else openArms();};$('bJour').onclick=()=>{if(mode==='day')openJournal();};$('bUse').onclick=()=>doUse();$('bWake').onclick=()=>wake();
+$('bArms').onclick=()=>{if(mode==='arms')closeArms();else openArms();};$('bJour').onclick=()=>{if(mode==='day')openJournal();};$('bUse').onclick=()=>doUse();$('bWake').onclick=()=>wake();
 $('bSkip').onclick=()=>{if(tp)tp.t=tp.def.dur;else if(IN)endIntro();};
 
 /* =============== OGGETTI INTERATTIVI =============== */
@@ -943,7 +1071,7 @@ function mkPostit(x,y,z,face){
   if(face==='up')m.rotation.set(-Math.PI/2,0,rr(-.4,.4));else m.rotation.set(0,face,rr(-.12,.12));
   return m;
 }
-function mkTape(x,y,z){const g=new THREE.Group();g.position.set(x,y,z);const mat=lam({color:0x111111});B(0,.013,0,.19,.025,.105,mat,{parent:g});plane(0,.0262,-.01,.15,.05,lam({map:TX.label}),-Math.PI/2,0,g);g.rotation.y=rr(-.6,.6);g.userData.glow=mat;return g;}
+function mkTape(x,y,z){const g=new THREE.Group();g.position.set(x,y,z);const mat=lam({color:0x111111});B(0,.013,0,.19,.025,.105,mat,{parent:g});plane(0,.0262,-.022,.15,.04,lam({map:TX.label}),-Math.PI/2,0,g);plane(0,.0262,.025,.1,.035,lam({color:0x050505}),-Math.PI/2,0,g);for(const dx of[-.032,.032]){const r=cyl(dx,.0265,.025,.014,.014,.002,lam({color:0xd8d8d8}),12,g);}B(0,.026,.052,.19,.002,.004,lam({color:0x333333}),{parent:g});g.rotation.y=rr(-.6,.6);g.userData.glow=mat;return g;}
 function buildDay(){
   itemGroup.clear();items=[];zones=[];const F=G.flags,n=G.night;
   const add=(o,mesh)=>{if(['tape','cam'].includes(o.kind)&&F['got_'+o.id])return;if(mesh){itemGroup.add(mesh);o.mesh=mesh;}items.push(o);};
@@ -954,6 +1082,9 @@ function buildDay(){
     add({id:'n2',kind:'note',x:9.45,y:.72,label:'Leggi il post-it'},mkPostit(9.45,1.35,.716,0));
     add({id:'n3',kind:'note',x:12.94,y:2.35,label:'Leggi il post-it'},mkPostit(12.968,1.45,2.35,-Math.PI/2));
     if(F.seenT1&&!F.got_cam){hidCam.visible=true;add({id:'cam',kind:'cam',x:6.6,y:.7,label:'Controlla sopra il pensile'});}
+  }else if(n===3){
+    add({id:'t3',kind:'tape',x:12.4,y:2.6,label:'Raccogli il nastro'},mkTape(12.4,.002,2.6));
+    add({id:'n7',kind:'note',x:12.94,y:5.6,label:'Leggi il post-it'},mkPostit(12.968,1.5,5.55,-Math.PI/2));
   }else{
     add({id:'t2',kind:'tape',x:3.25,y:9.5,label:'Guarda sotto il letto'},mkTape(3.18,.002,9.5));
     add({id:'n4',kind:'note',x:3.35,y:10.62,label:'Leggi il post-it'},mkPostit(3.25,.552,10.62,'up'));
@@ -963,7 +1094,13 @@ function buildDay(){
   zones.push({id:'tv',x:3.1,y:.9,r:1.6,label:'Usa la TV'});
   zones.push({id:'bed',x:3.3,y:9.6,r:1.4,label:'Vai a dormire'});
   zones.push({id:'front',x:12.6,y:2.5,r:1.3,label:'Porta d\'ingresso'});
-  zones.push({id:'cellar',x:12.6,y:5.8,r:1.2,label:'Porta della cantina'});
+  setCellarDoor(n>=3&&!!F.seenT3);
+  zones.push({id:'cellar',x:12.6,y:5.8,r:1.2,label:(n>=3&&F.seenT3)?'Scendi in cantina':'Porta della cantina'});
+  // cantina
+  CTV.forEach((c,i)=>zones.push({id:'ctv',i,x:c.zx,y:c.zz,r:.75,label:'Guarda la TV — '+(i===6?'7':'NOTTE '+(i+1))}));
+  zones.push({id:'stairs',x:15.5,y:4.9,r:1.0,label:'Risali le scale'});
+  zones.push({id:'wallw',x:17.3,y:1.8,r:1.3,label:'Leggi la scritta sul muro'});
+  zones.push({id:'box',x:15.5,y:7.8,r:1.0,label:'Guarda lo scatolone'});
   zones.push({id:'studio',x:10.9,y:6.2,r:1.0,label:'Porta dello studio'});
   zones.push({id:'mirror',x:8.0,y:8.45,r:1.2,label:'Specchio'});
   zones.push({id:'window',x:.4,y:2.9,r:1.2,label:'Guarda fuori'});
@@ -985,6 +1122,13 @@ function objText(){
     if(!F.seenT1)return 'Hai un nastro VHS. Guardalo: videoregistratore sotto la TV del salotto.';
     if(!F.got_cam)return 'Il nastro è stato girato in cucina, dall\'alto. Trova la telecamera nascosta.';
     return 'Qualcuno ti spia, e i post-it forse non sono tuoi. Stanotte scopri chi entra in camera. Vai a letto.';
+  }
+  if(n===3){
+    if(!F.got_t3)return 'Sotto la porta d\'ingresso c\'è un nastro nuovo.';
+    if(!F.seenT3)return 'Guarda il nuovo nastro nel videoregistratore del salotto.';
+    if(!F.cel_in)return 'La porta della cantina è socchiusa. Scendi.';
+    if(!F.cel_done){let c=0;for(let i=0;i<7;i++)if(F['ctv'+i])c++;return 'Guarda le sette TV della cantina ('+c+'/7).';}
+    return 'Risali e vai a letto. Stanotte dovrai tenere d\'occhio anche la cantina (CAM 7).';
   }
   if(!F.got_t2)return 'Ti sei svegliato con una scritta sul braccio. Leggila (Braccia) e segui l\'indizio.';
   if(!F.seenT2)return 'Un altro nastro. Guardalo nel videoregistratore del salotto.';
@@ -1032,27 +1176,32 @@ function useZone(z){
   const F=G.flags,n=G.night;
   switch(z.id){
     case 'tv':{
-      const id=n===1?'t1':'t2',seen=F['seen'+id.toUpperCase()];
+      const id='t'+Math.min(n,3),seen=F['seen'+id.toUpperCase()];
       if(F['got_'+id]&&!seen){startInsert(id);}
       else if(tvMode===0){tvMode=1;sfx.click();showText(seen?['Riavvolgi il nastro e lo rimetti dentro. Solo neve.','Quello che c\'era, l\'hai già visto. O ti ha già visto lui.']:['Accendi la TV. Solo neve.','Il videoregistratore è vuoto. Ti serve un nastro.']);}
       else{tvMode=0;sfx.click();toast('TV spenta');}
       break;}
     case 'bed':{
-      const need=n===1?F.seenT1:F.seenT2;
-      if(!need){showText(['Non puoi dormire. Non ancora.',n===1?'Prima devi guardare il nastro.':'Prima devi guardare il nuovo nastro.']);}
+      const need=n===1?F.seenT1:(n===2?F.seenT2:F.cel_done);
+      if(!need){showText(['Non puoi dormire. Non ancora.',n===3?(F.seenT3?'Prima devi scendere in cantina.':'Prima devi guardare il nuovo nastro.'):(n===1?'Prima devi guardare il nastro.':'Prima devi guardare il nuovo nastro.')]);}
       else{
         const go=()=>showText(['23:40. Ti sdrai. Il monitor sulla scrivania resta acceso.','Chiudi gli occhi… e la casa la vedi lo stesso. Da dove guardano le telecamere.'],()=>startNight());
         if(!F.briefed){F.briefed=1;F.seen_monitor=1;saveState();showText(['Prima di spegnere la luce, noti il foglio attaccato al monitor.'],()=>showNote('istr',go));}
         else if(n>=2&&!F.briefed2){F.briefed2=1;saveState();showText(['Sul foglio del monitor c\'è una riga nuova.'],()=>showNote('istr2',go));}
+        else if(n>=3&&!F.briefed3){F.briefed3=1;saveState();showText(['Sul monitor è comparso un settimo riquadro: la cantina. E un foglio nuovo.'],()=>showNote('istr3',go));}
         else go();
       }
       break;}
-    case 'front':F.seen_front=1;sfx.knock();showText(['Chiusa a chiave. La serratura è dall\'esterno.','Dall\'altra parte della porta senti qualcuno respirare.','Forse sei tu.']);break;
-    case 'cellar':dayBright=.25;sfx.knock();showText(['Il chiavistello è arrugginito, non si muove.','Dall\'altra parte c\'è silenzio. Troppo.','Poi, piano, qualcosa bussa due volte. Dall\'interno.']);break;
+    case 'front':F.seen_front=1;sfx.knock();if(F.blue_tat){showText(['La maniglia è fredda. Il tatuaggio blu dice che è aperta.','Non lo è. Non ancora.','Dall\'altra parte, qualcuno trattiene il respiro. Aspetta.']);break;}showText(['Chiusa a chiave. La serratura è dall\'esterno.','Dall\'altra parte della porta senti qualcuno respirare.','Forse sei tu.']);break;
+    case 'cellar':if(n>=3&&F.seenT3){goCellar();break;}dayBright=.25;sfx.knock();showText(['Il chiavistello è arrugginito, non si muove.','Dall\'altra parte c\'è silenzio. Troppo.','Poi, piano, qualcosa bussa due volte. Dall\'interno.']);break;
     case 'studio':F.seen_studio=1;showText(['Lo studio. Chiuso a chiave.','Sotto la porta passa una luce azzurra che pulsa, come uno schermo acceso.']);break;
     case 'window':F.seen_window=1;showText(['Fuori non c\'è niente.','Né lampioni, né case, né cielo. Solo nero, come un televisore spento.']);break;
     case 'fridge':showText(['Il frigo è quasi vuoto. Latte, un barattolo senza etichetta.','La data sul latte è di sei anni fa.']);break;
-    case 'monitor':F.seen_monitor=1;saveState();showText(['Un vecchio monitor a quattro riquadri. Ogni riquadro è una stanza di questa casa.','Qualcuno ci ha attaccato un foglio con lo scotch.'],()=>showNote('istr',()=>{if(G.night>=2)showNote('istr2');}));break;
+    case 'monitor':F.seen_monitor=1;saveState();showText(['Un vecchio monitor a quattro riquadri. Ogni riquadro è una stanza di questa casa.','Qualcuno ci ha attaccato un foglio con lo scotch.'],()=>showNote('istr',()=>{if(G.night>=2)showNote('istr2',()=>{if(G.night>=3)showNote('istr3');});}));break;
+    case 'stairs':goUp();break;
+    case 'wallw':F.seen_wall=1;saveState();showText(['Lettere rosse, enormi, colate sul cemento.','«SETTE NOTTI. SETTE NASTRI. NON USCIRE PRIMA DELLA SETTIMA».','È la scrittura storta delle etichette.']);break;
+    case 'box':F.seen_box=1;saveState();showText(['Uno scatolone: «VIDEONOLEGGIO STELLA — RESI».','Dentro, decine di cassette senza etichetta. Sul dorso di ognuna, a penna, la stessa data: 02-11-1998.']);break;
+    case 'ctv':ctvLook(z.i);break;
     case 'calendar':F.seen_cal=1;showText(['Un calendario fermo a novembre 1998.','Il giorno 2 è cerchiato in rosso. Sotto, con una scrittura storta: «IL NASTRO».']);break;
     case 'receipt':F.seen_receipt=1;showText(['Uno scontrino sbiadito.','«VIDEONOLEGGIO STELLA — SVENDITA PER CHIUSURA. 1 VHS senza titolo — L. 1.000».','Non ricordi di averlo comprato.']);break;
     case 'bill':F.seen_bill=1;showText(['Una bolletta mai aperta.','Il destinatario è «D. ——». Il resto del nome è stato grattato via con un\'unghia.','Hai qualcosa sotto le unghie.']);break;
@@ -1067,6 +1216,51 @@ function useZone(z){
       break;
   }
 }
+/* ---------- cantina: scendere, salire, le sette TV ---------- */
+function fadeTo(fn){const b=$('blk');b.style.transition='opacity .45s';b.style.opacity=1;inputLock=1;setTimeout(()=>{fn();setTimeout(()=>{b.style.opacity=0;inputLock=0;setTimeout(()=>b.style.transition='',500);},150);},480);}
+function goCellar(){
+  sfx.step(0);setTimeout(()=>sfx.step(0),250);setTimeout(()=>sfx.step(1),500);
+  fadeTo(()=>{p.x=15.75;p.y=4.9;p.a=0;p.pitch=-.05;
+    const F=G.flags;if(!F.cel_in){F.cel_in=1;saveState();updateObj();renderCellarStatics();showText(['Le scale scendono più di quanto dovrebbero.','In fondo, sette televisori. Qualcuno li ha disposti a semicerchio, rivolti verso le scale.','Verso di te.']);}else renderCellarStatics();
+    gset('hiss',.06,.5);});
+}
+function goUp(){sfx.step(1);fadeTo(()=>{p.x=12.2;p.y=5.8;p.a=Math.PI;p.pitch=0;gset('hiss',0,.5);});}
+function renderCellarStatics(){
+  // notte 1: qualcuno accanto al letto · notte 2: tu davanti alla porta
+  const g=ACT.ent;hideActors();sleeper.visible=true;blanketUp.visible=true;blanket.visible=false;body.visible=false;
+  g.visible=true;g.position.set(3.45,0,9.6);faceTo(g,1.9,10.5);setCam(CAMS[0],78,4/3);applyLights('night',0);
+  renderer.setRenderTarget(ctvRT[0]);renderer.render(scene,scam);
+  hideActors();resetBed();const y=ACT.you;y.visible=true;y.position.set(12.45,0,2.5);faceTo(y,13,2.5);setCam(CAMS[5],78,4/3);
+  renderer.setRenderTarget(ctvRT[1]);renderer.render(scene,scam);renderer.setRenderTarget(null);hideActors();
+}
+function inCellar(){return p.x>13.6;}
+const CTV_TXT=[
+  ['NOTTE 1.','La camera da letto, ripresa dall\'alto. Tu dormi.','Accanto al letto c\'è una figura altissima. Il nastro è fermo su quel fotogramma.'],
+  ['NOTTE 2.','L\'ingresso. Sei in piedi davanti alla porta, con la mano sulla maniglia.','Non ricordi di esserci arrivato.'],
+  ['NOTTE 3.','Sei tu. Adesso. Ripreso da dietro, dall\'angolo della cantina.','Alzi una mano. L\'immagine la alza un istante dopo.'],
+  ['NOTTE 4.','Spenta. Sull\'etichetta, a matita: «non ancora».'],
+  ['NOTTE 5.','Spenta. Sul vetro c\'è l\'impronta di una mano, dall\'interno.'],
+  ['NOTTE 6.','Spenta. Qualcuno ha grattato via l\'etichetta.'],
+  ['LA SETTIMA.','Spenta. L\'etichetta dice: «NASTRO ZERO».','Quando ti avvicini, lo schermo si scalda. Come se qualcuno dall\'altra parte si fosse avvicinato a sua volta.']
+];
+function ctvLook(i){
+  const F=G.flags;F['ctv'+i]=1;sfx.click();
+  showText(CTV_TXT[i],()=>{
+    let c=0;for(let k=0;k<7;k++)if(F['ctv'+k])c++;
+    updateObj();saveState();
+    if(c>=7&&!F.cel_done){F.cel_done=1;saveState();blueTattoo();}
+  });
+}
+function blueTattoo(){
+  const F=G.flags;dayBright=.05;sfx.boom(.8);glitchAmt=1;shake(400);
+  CTV.forEach(c=>c.flash=1.2);
+  showText(['Tutte e sette le TV si accendono insieme, per un istante. Neve bianca.','Poi buio. E un dolore sottile all\'avambraccio, come una penna premuta troppo forte.'],()=>{
+    if(!F.blue_tat){F.blue_tat=1;G.tattoos.push('§ESCI. LA PORTA È APERTA.');saveState();}
+    openArms();$('armsHint').textContent='Questa non l\'hai scritta tu. L\'inchiostro è blu. — tocca per chiudere';
+    armsAfter=()=>{showText(['Le altre scritte sono nere, storte, tue.','Questa è blu. Ordinata. Come il post-it del vaso.'],()=>{updateObj();showHint('Risali e vai a letto. Stanotte si guarda anche la cantina.',7000);});};
+  });
+}
+let armsAfter=null;
 function scareBed(){scareS={t:0,done:false};inputLock=9;}
 function updateScare(dt){
   const s=scareS;s.t+=dt;
@@ -1104,7 +1298,7 @@ function updateInsert(dt){
   if(t>3.6){const id=ins.id;ins=null;playTape(id);}
 }
 function playTape(id){
-  const def=TAPES[id];tp={id,def,t:0,g:[],sc:false};
+  const def=TAPES[id]||DEF_TAPES[id];tp={id,def,t:0,g:[],sc:false};
   mode='tape';tvMode=3;gset('hiss',.12,.2);
   show('tapehud',1);show('bSkip',1);show('obj',0);hideDayBtns();
 }
@@ -1145,7 +1339,7 @@ function setTapeActors(){
     if(glitchAmt>.3&&Math.random()<.3)continue;
     const pos=keyPos(a.keys,t);const g=ACT[a.k];g.visible=true;
     const jit=glitchAmt>.3?(Math.random()-.5)*.15:0;
-    g.position.set(pos[0]+jit,0,pos[1]);
+    moveA(g,pos[0],pos[1],jit);
     if(a.face==='cam')faceTo(g,d.cam.p[0],d.cam.p[2]);
     else if(a.face==='move'){const p2=keyPos(a.keys,t+.2);if(Math.hypot(p2[0]-pos[0],p2[1]-pos[1])>.005)faceTo(g,p2[0],p2[1]);}
     else{const p2=keyPos(a.keys,t+.2);if(Math.hypot(p2[0]-pos[0],p2[1]-pos[1])>.02)faceTo(g,p2[0],p2[1]);else faceTo(g,a.face[0],a.face[1]);}
@@ -1156,7 +1350,7 @@ function setTapeActors(){
 function hideNight(){['clock','camname','lucw','lucl','bWake','rec','nobj'].forEach(i=>show(i,0));$('cams').style.display='none';}
 function startNight(){
   const num=G.night;
-  N={num,t:0,len:CFG.len,cam:0,luc:100,cams:num===1?[0,1,2,3]:[0,1,2,3,4,5],
+  N={num,t:0,len:CFG.len,cam:0,luc:100,cams:num===1?[0,1,2,3]:(num===2?[0,1,2,3,4,5]:[0,1,2,3,4,5,6]),walkP:num===3?WALK3:WALK1,tvOn:[1,1,0,0,0,0,0],tvT:0,tvGaze:0,speed:1,
     entA:{on:false,p:0,boost:0,x:4.0,y:8.8,g:ACT.ent},
     ent2:{on:false,p:0,cam:0,x:0,y:0,g:ACT.ent2},
     walker:{on:false,q:0,x:3.3,y:9.6,seen:false},
@@ -1169,6 +1363,16 @@ function startNight(){
     N.events.push({t:40,fn:()=>{sfx.boom(.9);shake(250);toast('…');}});
     N.events.push({t:60,fn:()=>{N.entA.on=true;sfx.whisper();sfx.heart();toast('Il letto non è più solo.',3200);nightHint('entA','Qualcosa è entrato in camera da letto (CAM 1). Guardalo: finché lo inquadri, arretra.',8000);}});
     N.events.push({t:96,fn:()=>{N.amb.armed=true;if(N.cam===1)triggerAmb();}});
+  }else if(num===3){
+    setCellarDoor(true);
+    N.decoys.push({cam:6,t0:25,t1:60,limit:3,seen:0,gone:false,g:ACT.decoyD,x:18.0,y:4.8,face:[19.6,4.8]});
+    N.events.push({t:18,fn:()=>{N.flick={cam:6,t:3};sfx.knock();}});
+    N.events.push({t:40,fn:()=>{N.entA.on=true;sfx.whisper();sfx.heart();toast('Il letto non è più solo.',3200);nightHint('entA','Qualcosa è entrato in camera da letto (CAM 1). Guardalo: finché lo inquadri, arretra.',7000);}});
+    N.events.push({t:70,fn:()=>{N.walker.on=true;N.sleeperUp=true;sfx.whisper();toast('Il tuo corpo si è alzato dal letto.',3500);nightHint('walk3','Il tuo corpo va verso la cantina, come nel nastro. Seguilo con CAM 1 e CAM 2: guardato si ferma. Oppure SVEGLIATI.',9000);}});
+    N.events.push({t:105,fn:()=>{
+      let best=0,bv=1e9;for(let i=0;i<4;i++){const v=(G.stare['c'+i]||0)+Math.random()*3;if(v<bv){bv=v;best=i;}}
+      N.ent2.on=true;N.ent2.cam=best;sfx.heart();toast('Qualcosa sta cercando l\'angolo che guardi di meno.',3500);
+    }});
   }else{
     N.decoys.push({cam:4,t0:30,t1:75,limit:4,seen:0,gone:false,g:ACT.decoyD,x:7.85,y:8.45,face:[8.6,8.45]});
     N.events.push({t:10,fn:()=>{N.flick={cam:1,t:3};sfx.knock();}});
@@ -1183,10 +1387,10 @@ function startNight(){
   show('clock',1);show('camname',1);show('lucw',1);show('lucl',1);show('rec',1);
   const cb=$('cams');cb.textContent='';cb.style.display='flex';
   N.cams.forEach(i=>{const b=document.createElement('button');b.className='btn';b.textContent=String(i+1);b.onclick=()=>selCam(i);cb.appendChild(b);});
-  if(num===2){$('bWake').style.display='block';$('bWake').textContent='SVEGLIATI ('+N.wakes+')';}
+  if(num>=2){$('bWake').style.display='block';$('bWake').textContent='SVEGLIATI ('+N.wakes+')';}
   selCam(0,true);gset('hiss',.05,.2);gset('drone',.12,.8);
   $('nobj').textContent='RESISTI FINO ALLE 06:00';show('nobj',1);
-  nightHint('start',num===1?'Vedi la casa dalle telecamere: cambiale con i pulsanti in basso (o 1-4). Tieni d\'occhio soprattutto la CAM 1, dove dormi.':'Ora hai 6 telecamere. Stanotte tieni d\'occhio il tuo letto.',9000);
+  nightHint('start',num===1?'Vedi la casa dalle telecamere: cambiale con i pulsanti in basso (o 1-4). Tieni d\'occhio soprattutto la CAM 1, dove dormi.':(num===2?'Ora hai 6 telecamere. Stanotte tieni d\'occhio il tuo letto.':'Nuova telecamera: CAM 7, la cantina. Le TV si accendono da sole: se si accendono tutte e sette è finita. Guardale dalla CAM 7 per spegnerle.'),10000);
   G.flags.nightsStarted=(G.flags.nightsStarted||0)+1;
 }
 function selCam(i,silent){
@@ -1219,7 +1423,7 @@ function placeNightActors(){
   hideActors();
   const glitchHide=glitchAmt>.3&&Math.random()<.25;
   const c=CAMS[N.cam];
-  const put=(g,x,z,on,fx,fz)=>{if(!on)return;g.visible=true;g.position.set(x,0,z);faceTo(g,fx,fz);};
+  const put=(g,x,z,on,fx,fz)=>{if(!on)return;g.visible=true;moveA(g,x,z);faceTo(g,fx,fz);};
   const E=N.entA;put(E.g,E.x,E.y,E.on&&!glitchHide,c.p[0],c.p[2]);
   const E2o=N.ent2;put(E2o.g,E2o.x,E2o.y,E2o.on,c.p[0],c.p[2]);
   const Wk=N.walker;if(Wk.on){const g=Wk.seen?ACT.walkerDop:ACT.walkerYou;const nx=walkPos(Wk.q+.02);put(g,Wk.x,Wk.y,true,nx[0],nx[1]);}
@@ -1239,7 +1443,7 @@ function updateNight(dt){
   const E=N.entA;
   if(E.on){
     if(seen(E.g)){E.p=Math.max(0,E.p-dt*CFG.retreat);drain+=CFG.drainEnt;}
-    else E.p+=dt*CFG.advance*(E.boost>0?1.7:1);
+    else E.p+=dt*CFG.advance*(E.boost>0?1.7:1)*N.speed;
     E.boost=Math.max(0,E.boost-dt);
     if(N.t>N.len-18)E.p-=dt*.12;
     E.p=Math.max(0,E.p);
@@ -1249,7 +1453,7 @@ function updateNight(dt){
   const E2o=N.ent2;
   if(E2o.on){
     if(seen(E2o.g)){E2o.p=Math.max(0,E2o.p-dt*CFG.retreat);drain+=CFG.drainEnt;}
-    else E2o.p+=dt*CFG.advance*.8;
+    else E2o.p+=dt*CFG.advance*.8*N.speed;
     if(N.t>N.len-18)E2o.p-=dt*.12;
     E2o.p=Math.max(0,E2o.p);
     const a=E2[E2o.cam][0],b=E2[E2o.cam][1];E2o.x=lerp(a[0],b[0],E2o.p);E2o.y=lerp(a[1],b[1],E2o.p);
@@ -1259,9 +1463,17 @@ function updateNight(dt){
   if(Wk.on){
     const g=Wk.seen?ACT.walkerDop:ACT.walkerYou;
     if(seen(g)){drain+=CFG.walkDrain;Wk.seen=true;}
-    else{Wk.q+=dt*CFG.walkSpeed;Wk.seen=false;if(Math.random()<dt*1.2&&N.cam===1)sfx.step(0);}
+    else{Wk.q+=dt*CFG.walkSpeed*N.speed;Wk.seen=false;if(Math.random()<dt*1.2&&N.cam===1)sfx.step(0);}
     const pp=walkPos(Wk.q);Wk.x=pp[0];Wk.y=pp[1];
-    if(Wk.q>=1){failNight('door');return;}
+    if(Wk.q>=1){failNight(N.num===3?'cellar':'door');return;}
+  }
+  if(N.num===3){
+    N.tvT+=dt;
+    if(N.tvT>=15){N.tvT=0;const off=[];N.tvOn.forEach((v,i)=>{if(!v)off.push(i);});if(off.length){N.tvOn[off[(Math.random()*off.length)|0]]=1;sfx.clunk();const c=N.tvOn.reduce((a,b)=>a+b,0);toast('Una TV in cantina si è accesa ('+c+'/7)',2500);if(c>=4)nightHint('tv4','Le TV accese rendono tutto più veloce. Vai sulla CAM 7 e spegnile guardandole.',7000);}}
+    const cnt=N.tvOn.reduce((a,b)=>a+b,0);
+    if(N.cam===6&&cnt>0){N.tvGaze+=dt;drain+=2.5;if(N.tvGaze>=2.2){N.tvGaze=0;N.tvOn[N.tvOn.lastIndexOf(1)]=0;sfx.click();glitchAmt=Math.max(glitchAmt,.5);}}else N.tvGaze=0;
+    if(cnt>=7){failNight('tv');return;}
+    N.speed=1+.12*cnt;
   }
   for(const d of N.decoys){
     const on=N.t>=d.t0&&N.t<d.t1&&!d.gone;
@@ -1272,6 +1484,7 @@ function updateNight(dt){
   const warn=new Set();
   if(E.on)warn.add(0);if(E2o.on)warn.add(E2o.cam);
   if(Wk.on)warn.add(Wk.y>6.6?0:(Wk.y>5?1:5));
+  if(N.num===3&&N.tvOn.reduce((a,b)=>a+b,0)>=3)warn.add(6);
   for(const d of N.decoys)if(N.t>=d.t0&&N.t<d.t1&&!d.gone){warn.add(d.cam);nightHint('decoy','Una figura immobile ti fissa da una telecamera. Alcune cose vogliono soltanto essere guardate.',7000);}
   const bs=$('cams').children;for(let k=0;k<bs.length;k++)bs[k].classList.toggle('warn',warn.has(N.cams[k])&&N.cams[k]!==N.cam);
   if(N.luc<55)nightHint('luc','Guardare ti consuma (LUCIDITÀ). Quando non c\'è niente da fermare, guarda una stanza vuota: si ricarica.',7000);
@@ -1291,7 +1504,7 @@ function updateNight(dt){
 function failNight(reason){
   if(N.fail)return;
   N.fail={reason,t:0,shown:false};
-  if(reason==='ent')N.cam=0;else if(reason==='ent2')N.cam=N.ent2.cam;else if(reason==='door')N.cam=5;
+  if(reason==='ent')N.cam=0;else if(reason==='ent2')N.cam=N.ent2.cam;else if(reason==='door')N.cam=5;else if(reason==='tv')N.cam=6;else if(reason==='cellar')N.cam=1;
   $('camname').textContent=CAMS[N.cam].n;
   sfx.boom(1.4);shake(900);flash(200);glitchAmt=1;gset('hiss',.3,.1);gset('drone',0,.1);
 }
@@ -1309,6 +1522,7 @@ function failTick(){
 }
 function resetBed(){sleeper.visible=false;blanketUp.visible=false;blanket.visible=true;}
 const MORN1=['06:00. Ti svegli sul pavimento del corridoio. Non ricordi di esserti alzato.','Il letto è disfatto. Hai le dita fredde.','Sull\'avambraccio c\'è una scritta nuova, ancora gonfia: SOTTO IL LETTO.'];
+const MORN3=['06:00. Ti svegli in cantina, seduto per terra davanti alle sette TV.','Sono tutte spente. Tranne la quarta.','Sullo schermo c\'è un\'insegna al neon che lampeggia: VIDEONOLEGGIO STELLA. E sotto, una vetrina. Dentro, qualcuno con la tua faccia sta mettendo in ordine le cassette.'];
 const MORN2=['06:00. Questa volta sei nel bagno, in piedi davanti allo specchio.','Il riflesso sorride un secondo dopo di te.','Sotto la porta c\'è un nastro nuovo. L\'etichetta dice: «TU, MENTRE LEGGI QUESTO».'];
 function winNight(){
   const n=N.num;saveRun('win');hideNight();hideActors();gset('hiss',0,.3);gset('drone',.05,.5);setStyle('day');
@@ -1316,9 +1530,12 @@ function winNight(){
   if(n===1){
     G.night=2;G.tattoos.push('SOTTO IL LETTO');p.x=2.5;p.y=5.8;p.a=0;p.pitch=0;saveState();
     showText(MORN1,()=>{beginDay(null,[2.5,5.8,0]);showHint('Hai una scritta nuova sul braccio. Leggila con il pulsante Braccia (in alto).',7000);});
-  }else{
+  }else if(n===2){
     G.night=3;G.tattoos.push('NON GUARDARE IL SETTIMO NASTRO');p.x=7.6;p.y=8.45;p.a=0;p.pitch=0;saveState();
-    showText(MORN2,()=>endCard());
+    showText(MORN2,()=>{beginDay(null,[7.6,8.45,-2.15]);showHint('Un nastro nuovo sotto la porta d\'ingresso.',6000);});
+  }else if(n===3){
+    G.night=4;p.x=16.2;p.y=4.9;p.a=0;p.pitch=0;saveState();
+    showText(MORN3,()=>endCard());
   }
 }
 function endCard(){
@@ -1360,7 +1577,7 @@ function updateIntro(dt,ts){
     hideActors();sleeper.visible=!!sh.sleeper;blanketUp.visible=!!sh.sleeper;blanket.visible=!sh.sleeper;body.visible=false;
     if(sh.ent){const g=ACT.ent;g.visible=!(glitchAmt>.3&&Math.random()<.3);let x=sh.ent[0],z=sh.ent[1];
       if(sh.lunge&&t>=sh.scare-.5){const k=clamp((t-(sh.scare-.5))/.5,0,1);x=lerp(x,sh.lunge[0],k);z=lerp(z,sh.lunge[1],k);}
-      g.position.set(x,0,z);if(sh.face)faceTo(g,sh.face[0],sh.face[1]);else faceTo(g,sh.cam.p[0],sh.cam.p[2]);}
+      moveA(g,x,z);if(sh.face)faceTo(g,sh.face[0],sh.face[1]);else faceTo(g,sh.cam.p[0],sh.cam.p[2]);}
     applyLights('night',ts);renderer.render(scene,scam);
   }
   if(t>=sh.d){IN.i++;if(IN.i>=INTRO.length)endIntro();else shotBegin();}
@@ -1379,17 +1596,29 @@ function applyLights(preset,ts,room){
     scene.fog.density=.07;hemi.intensity=.3*dayBright;irLight.intensity=0;
     for(const L of LIGHTS)L.l.intensity=L.base*dayBright*fl(L.flick)*(.97+Math.random()*.03);
   }else{ // notte: luci spente, illuminatore IR delle telecamere
-    scene.fog.density=.03;hemi.intensity=preset==='tape'?.35:.5;irLight.position.copy(scam.position);irLight.intensity=preset==='tape'?3:5;
+    scene.fog.density=.03;hemi.intensity=preset==='tape'?.35:.5;irLight.position.copy(scam.position);irLight.intensity=preset==='tape'?3:(scam.position.x>13.5?12:5);
     for(const L of LIGHTS)L.l.intensity=(room&&L.room===room)?L.base*.8*fl(L.flick):0;
   }
   let tv=0;
   if(tvMode===1)tv=rr(.5,1.1);else if(tvMode===2)tv=.9;else if(tvMode===3)tv=rr(.6,.9);
   tvLight.intensity=tv*2.2*(preset==='day'?1:.6);tvLight.color.setHex(tvMode===2?0x5070ff:0xc0ccff);
   tvUni.mode.value=tvMode;tvUni.map.value=tvMode===3?tapeRT.texture:blueTex;tvUni.time.value=ts/1000;tvUni.glitch.value=glitchAmt;
+  // le sette TV della cantina
+  let on=0;const F=G.flags;
+  CTV.forEach((c,i)=>{
+    let m=0,map=blueTex;
+    if(N&&N.num===3){m=N.tvOn[i]?1:0;}
+    else if(G.night===3&&F.cel_in&&i<3){m=3;map=ctvRT[i].texture;}
+    if(c.flash>0){c.flash-=.016;m=1;}
+    c.uni.mode.value=m;c.uni.map.value=map;c.uni.time.value=ts/1000+i*3.1;c.uni.glitch.value=i===2?.15:glitchAmt*.5;if(m)on++;
+  });
+  cellarTvLight.intensity=on*1.5;
 }
 
 /* =============== LOOP =============== */
-function hideDayBtns(){show('bUse',0);show('bArms',0);}
+function hideDayBtns(){show('bUse',0);show('bArms',0);show('bJour',0);}
+const isFull=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+['pointerup','touchend','keydown','click'].forEach(ev=>addEventListener(ev,()=>{if(!isFull())goFull();},{passive:true,capture:true}));
 function collide(x,z,R){
   for(const c of colliders){
     const nx=clamp(x,c[0],c[2]),nz=clamp(z,c[1],c[3]);
@@ -1423,7 +1652,7 @@ function updateDay(dt){
   const cand=findCand();
   const b=$('bUse');
   if(cand&&!scareS){b.style.display='block';b.textContent=cand.label+' [E]';}else b.style.display='none';
-  $('bArms').style.display=G.tattoos.length?'block':'none';
+  $('bArms').style.display=G.tattoos.length?'block':'none';$('bJour').style.display='block';
   $('obj').style.display='block';
 }
 function playerCamUpdate(){
@@ -1439,18 +1668,25 @@ function updateBody(t){
   hist.push({t,x:p.x,y:p.y,a:p.a});while(hist.length>120)hist.shift();
   const lag=(G.night>=2&&G.flags.seenT2)?.45:0;let s=hist[hist.length-1];
   if(lag)for(let i=hist.length-1;i>=0;i--){if(t-hist[i].t>=lag){s=hist[i];break;}}
-  body.position.set(s.x,0,s.y);body.rotation.y=Math.PI/2-s.a;
+  moveA(body,s.x,s.y);body.rotation.y=Math.PI/2-s.a;
   body.visible=true;
 }
 function glitchCss(){
   if(glitchAmt>.05){const dx=(Math.random()-.5)*30*glitchAmt;const sk=(Math.random()-.5)*6*glitchAmt;cv.style.transform=`translateX(${dx}px) skewX(${sk}deg)`;}
   else if(cv.style.transform)cv.style.transform='';
 }
-function renderDayView(ts){applyLights('day',ts);renderer.render(scene,pcam);}
+function renderDayView(ts){
+  // TV 3 della cantina: diretta da CAM 7, con dentro il tuo corpo (in ritardo)
+  if(inCellar()&&G.night===3&&G.flags.cel_in&&frame%2===0){
+    setCam(CAMS[6],70,4/3);scam.layers.enable(1);applyLights('day',ts);
+    renderer.setRenderTarget(ctvRT[2]);renderer.render(scene,scam);renderer.setRenderTarget(null);scam.layers.disable(1);
+  }
+  applyLights('day',ts);renderer.render(scene,pcam);
+}
 function renderTapeToRT(ts){
   const d=tp.def;
   if(tp.t>=d.cut[0]&&tp.t<d.cut[1])return true;
-  setTapeActors();
+  setTapeActors();if(d.doorOpen!==undefined)setCellarDoor(tp.t>=d.doorOpen);
   setCam({p:d.cam.p,t:d.cam.t},d.cam.fov,4/3);
   body.visible=false;
   applyLights('tape',ts,d.light);
@@ -1462,7 +1698,7 @@ function updateNightView(ts){
   if(N.fail){
     hideActors();const f=N.fail,g=ACT.failE;g.visible=true;
     const dir=new THREE.Vector3(c.t[0]-c.p[0],0,c.t[2]-c.p[2]).normalize();
-    g.position.set(c.p[0]+dir.x*1.0+(Math.random()-.5)*.05,0,c.p[2]+dir.z*1.0);faceTo(g,c.p[0],c.p[2]);
+    moveA(g,c.p[0]+dir.x*1.0,c.p[2]+dir.z*1.0,(Math.random()-.5)*.05);faceTo(g,c.p[0],c.p[2]);
     applyLights('night',ts);renderer.render(scene,scam);
     setStatic(f.t>1.2);return;
   }
@@ -1483,12 +1719,13 @@ function titleView(ts){
   glitchAmt=Math.max(0,glitchAmt-.03);
   tvMode=1;body.visible=false;hideActors();
   // ogni tanto, per un attimo, qualcuno in fondo al corridoio
-  if(k===1&&u>.55&&u<.6){ACT.ent.visible=true;ACT.ent.position.set(11.2,0,5.8);faceTo(ACT.ent,pcam.position.x,pcam.position.z);}
+  if(k===1&&u>.55&&u<.6){ACT.ent.visible=true;moveA(ACT.ent,11.2,5.8);faceTo(ACT.ent,pcam.position.x,pcam.position.z);}
   applyLights('day',ts);renderer.render(scene,pcam);
   if(frame%15===0){const s=11520+((ts/1000)|0);$('osdTime').textContent='NOV 02 1998 '+fmtClock(s);}
 }
 function loop(ts){
-  const dt=Math.min(.05,((ts-last)/1000)||.016);last=ts;frame++;
+  const dt=Math.min(.05,((ts-last)/1000)||.016);last=ts;frame++;DT=dt;
+  if(ACT.scare.visible)animH(ACT.scare,dt,0);
   try{
     if(toastT>0){toastT-=dt*1000;if(toastT<=0)toastEl.style.display='none';}
     if(hintT>0){hintT-=dt*1000;if(hintT<=0)$('hint').style.display='none';}
@@ -1529,13 +1766,13 @@ function loop(ts){
 function refreshTitle(){
   const s=loadLocal();const has=!!(s&&s.night);
   $('bCont').style.display=has?'inline-block':'none';
-  if(has)$('bCont').textContent='CONTINUA — NOTTE '+Math.min(2,s.night);
+  if(has)$('bCont').textContent='CONTINUA — NOTTE '+Math.min(3,s.night);
 }
 function startGame(fresh){
   audioInit();goFull();
   $('title').style.display='none';music.stop();
   if(fresh){G=newState();startIntro();return;}
-  const s=loadLocal();G=s&&s.night?Object.assign(newState(),s):newState();if(G.night>2){G.night=2;}
+  const s=loadLocal();G=s&&s.night?Object.assign(newState(),s):newState();if(G.night>3){G.night=3;}
   gset('drone',.05,.6);
   if(G.night===1){p.x=SOFA[0];p.y=SOFA[1];p.a=SOFA[2];p.pitch=0;}
   else{p.x=2.5;p.y=5.8;p.a=0;p.pitch=0;}
@@ -1554,7 +1791,7 @@ resize();refreshTitle();
 $('loading').style.display='none';
 requestAnimationFrame(loop);
 cloudInit();
-window.__nz={p,get mode(){return mode},get G(){return G},set G(v){G=v},startNight:()=>startNight(),playTape:id=>startInsert(id),get N(){return N}};
+window.__nz={ACT,moveA,faceTo,p,get mode(){return mode},get G(){return G},set G(v){G=v},startNight:()=>startNight(),playTape:id=>startInsert(id),get N(){return N}};
 </script>
 <script>setTimeout(()=>{const l=document.getElementById('loading');if(l&&l.style.display!=='none')l.textContent='Il gioco non è partito. Ricarica la pagina (serve un browser recente).';},8000);</script>
 </body>
