@@ -440,7 +440,7 @@ function walkPos(q){let d=clamp(q,0,1)*WALKLEN;for(let i=0;i<WSEG.length;i++){if
 const newState=()=>({v:1,ts:0,night:1,deaths:0,tattoos:[],flags:{},stare:{}});
 let G=newState();
 let mode='title',prevMode='day';
-const p={x:5.5,y:4.9,a:-Math.PI/2};
+const p={x:5.5,y:5.5,a:-Math.PI/2};
 let items=[],zones=[],pathLog=[],plogT=0;
 let tp=null,N=null,tvMode=0,glitchAmt=0,dayBright=1,scareS=null,inputLock=0;
 const bedSpr={x:3,y:13,tex:SP.bed,size:.5,off:0};
@@ -848,7 +848,7 @@ function failTick(){
     $('fail').style.display='none';
     G.deaths++;const tat=DEATH_TAT[(G.deaths-1)%DEATH_TAT.length];G.tattoos.push(tat);
     saveRun('fail');hideNight();mode='trans';setStyle('day');gset('hiss',0,.2);gset('drone',.05,.5);
-    p.x=5.5;p.y=4.9;p.a=-Math.PI/2;N=null;
+    p.x=5.5;p.y=5.5;p.a=-Math.PI/2;N=null;
     showText(['Ti svegli sul divano. È ancora sera.','Sul braccio c\'è un segno nuovo: «'+tat+'».'],()=>beginDay());
     saveState();
   }
@@ -889,9 +889,9 @@ function updateDay(dt){
     const sp=(run?3.4:2)*dt,ca=Math.cos(p.a),sa=Math.sin(p.a);
     const dx=(ca*fwd-sa*str)*sp,dy=(sa*fwd+ca*str)*sp,R=.22;
     const free=(x,y)=>!(blockedAt(x-R,y-R)||blockedAt(x+R,y-R)||blockedAt(x-R,y+R)||blockedAt(x+R,y+R));
-    let moved=false;
-    if(dx&&free(p.x+dx,p.y)){p.x+=dx;moved=true;}
-    if(dy&&free(p.x,p.y+dy)){p.y+=dy;moved=true;}
+    let moved=false;const stuck=!free(p.x,p.y);
+    if(dx&&(stuck||free(p.x+dx,p.y))){p.x+=dx;moved=true;}
+    if(dy&&(stuck||free(p.x,p.y+dy))){p.y+=dy;moved=true;}
     if(moved){
       stepAcc=(stepAcc||0)+Math.hypot(dx,dy);
       if(stepAcc>.85){stepAcc=0;sfx.step(run);}
@@ -948,10 +948,10 @@ function startGame(fresh){
   else{const s=loadLocal();G=s&&s.night?Object.assign(newState(),s):newState();if(G.night>2){G.night=2;}}
   gset('drone',.05,.6);
   if(G.night===1&&!G.flags.got_t1&&!G.flags.intro){
-    G.flags.intro=1;p.x=5.5;p.y=4.9;p.a=-Math.PI/2;
+    G.flags.intro=1;p.x=5.5;p.y=5.5;p.a=-Math.PI/2;
     beginDay(['Ti svegli sul divano. La TV è accesa: solo neve.','Non ricordi come ti chiami. Non ricordi come sei arrivato qui.','Sul tavolino, un post-it giallo. La calligrafia è la tua. Non ricordi di averlo scritto.']);
   }else{
-    p.x=G.night===1?5.5:4.5;p.y=G.night===1?4.9:8.6;p.a=G.night===1?-Math.PI/2:0;
+    p.x=G.night===1?5.5:4.5;p.y=G.night===1?5.5:8.6;p.a=G.night===1?-Math.PI/2:0;
     beginDay(['Sera. La casa è uguale a ieri, ma l\'odore è diverso.']);
   }
 }
