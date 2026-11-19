@@ -58,11 +58,35 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 #mirrorView{background:rgba(0,0,0,.88);gap:12px}
 #mirFrame{width:58%;max-width:520px;height:62%;border:10px solid #3b2a1c;background:linear-gradient(135deg,#7d8f95,#31404a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px;transform:scaleX(-1)}
 #mirFrame .ink{color:#0b1220}
-#title{background:radial-gradient(ellipse at center,rgba(20,0,0,.45),rgba(0,0,0,.9));z-index:30;display:flex;text-align:center;padding:20px}
+#title{background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.55) 50%,rgba(0,0,0,.15) 100%);z-index:30;display:none;align-items:flex-start;text-align:left;padding:0 8%}
 #title h1{font-family:'VT323',monospace;font-size:clamp(46px,11vw,110px);margin:0;letter-spacing:6px;color:#e8e4d8;text-shadow:3px 0 #d11,-3px 0 #0cc;animation:gl 3.5s infinite}
 @keyframes gl{0%,90%,100%{transform:none;text-shadow:3px 0 #d11,-3px 0 #0cc}92%{transform:translateX(-8px) skewX(8deg);text-shadow:-8px 0 #d11,8px 0 #0cc}95%{transform:translateX(6px)}}
 #title p{margin:6px 0;font-size:clamp(18px,3vw,26px);opacity:.8;max-width:760px}
-#title .btn{display:inline-block;font-size:28px;margin:8px;padding:12px 24px}
+#title .osd{position:absolute;top:14px;left:18px;font-size:30px;text-shadow:0 0 6px #000}
+#title .osd2{position:absolute;bottom:14px;right:18px;font-size:26px;opacity:.85;text-shadow:0 0 6px #000}
+#title .menu{display:flex;flex-direction:column;align-items:flex-start;margin-top:16px}
+#title .menu .btn{display:inline-block;background:none;border:none;border-radius:0;font-size:clamp(26px,4.6vw,40px);padding:4px 0;margin:2px 0;letter-spacing:3px;text-align:left}
+#title .menu .btn:hover,#title .menu .btn:focus{color:#fff;text-shadow:2px 0 #d11,-2px 0 #0cc;outline:none}
+#title .menu .btn::before{content:'▶ ';opacity:0}
+#title .menu .btn:hover::before,#title .menu .btn:focus::before{opacity:1}
+#press{z-index:31;background:#000;display:flex;cursor:pointer;text-align:center}
+#press .ins{font-size:clamp(26px,5vw,44px);animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+#press small{font-size:18px;opacity:.5;margin-top:18px}
+#cine{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);width:84%;text-align:center;font-family:'Special Elite','Courier New',monospace;font-size:clamp(20px,3.6vw,34px);text-shadow:0 0 8px #000,0 0 3px #000;display:none;z-index:15;white-space:pre-line;pointer-events:none}
+#blk{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:14}
+#hint{left:50%;bottom:70px;transform:translateX(-50%);font-size:20px;max-width:62%!important;text-align:center;background:rgba(25,0,0,.7);border:1px solid #a33;padding:6px 14px;max-width:82%;display:none}
+#nobj{left:50%;top:44px;transform:translateX(-50%);font-size:21px;opacity:.8;display:none;white-space:nowrap;text-shadow:0 0 6px #000}
+#cams .btn.warn{animation:warn .6s infinite}
+@keyframes warn{50%{border-color:#f33;box-shadow:0 0 14px #f22;color:#f88}}
+#bJour{top:10px;right:200px}
+#journal{background:rgba(0,0,0,.8);z-index:32}
+#jPage{background:#e9e2cc;color:#1d1d1d;width:min(880px,92%);max-height:88%;overflow:auto;padding:20px 28px;font-family:'Special Elite','Courier New',monospace;font-size:clamp(14px,2.2vw,19px);line-height:1.45;box-shadow:0 8px 40px #000;background-image:repeating-linear-gradient(transparent 0 27px,rgba(60,90,160,.18) 27px 28px);text-align:left}
+#jPage h3{font-family:'VT323',monospace;font-size:30px;margin:10px 0 2px;color:#7c1111;letter-spacing:2px}
+#jPage ul{margin:4px 0 6px;padding-left:22px}#jPage li{margin:3px 0}
+#jPage .q b{color:#7c1111}#jPage .dim{opacity:.45}
+#jPage .close{font-family:'VT323',monospace;font-size:20px;opacity:.6;text-align:right}
+#armsHint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:22px;opacity:.8;display:none;z-index:12;text-shadow:0 0 6px #000;white-space:nowrap}
 #cloud{font-size:18px;opacity:.6;margin-top:10px}
 #credit{font-size:20px;opacity:.7;margin-top:14px;letter-spacing:2px}
 #fail{background:#000;z-index:25;font-size:clamp(26px,5vw,44px);text-align:center;padding:30px}
@@ -79,14 +103,15 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 <div id="app">
   <canvas id="screen"></canvas>
   <canvas id="noise" width="160" height="90"></canvas>
-  <div id="scan"></div><div id="vig"></div><div id="flash"></div><div id="cross"></div>
+  <div id="scan"></div><div id="vig"></div><div id="flash"></div><div id="cross"></div><div id="blk"></div><div id="cine"></div><div id="armsHint">Le tue braccia — tocca per chiudere</div>
   <div id="hud">
     <div id="obj"></div>
     <div id="clock"></div><div id="camname"></div><div id="rec">● REC</div>
     <div id="lucw"><div id="luc"></div></div><div id="lucl">LUCIDITÀ</div>
-    <div id="tapehud"></div><div id="cc"></div><div id="toast"></div>
+    <div id="tapehud"></div><div id="cc"></div><div id="toast"></div><div id="hint"></div><div id="nobj"></div>
     <button class="btn" id="bFull" title="Schermo intero">⛶</button>
     <button class="btn" id="bArms">Braccia [B]</button>
+    <button class="btn" id="bJour">Taccuino [J]</button>
     <button class="btn" id="bUse">Interagisci</button>
     <button class="btn" id="bWake">SVEGLIATI</button>
     <button class="btn" id="bSkip">Salta ▶▶</button>
@@ -107,13 +132,15 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
     <div id="credit">Creato da GlitchCraft</div>
   </div>
   <div class="modal" id="title">
+    <div class="osd">PLAY ▶</div><div class="osd2" id="osdTime">NOV 02 1998 03:12:00</div>
     <h1>NASTRO ZERO</h1>
-    <p>Ogni mattina trovi un nastro sotto la porta. Qualcuno ti filma in casa tua. Qualcuno scrive sui muri con la tua calligrafia.</p>
-    <p style="font-size:20px;opacity:.6">PC: WASD muovi · trascina il mouse per guardare · E interagisci · B braccia · 1-6 telecamere · Spazio sveglia<br>Telefono (orizzontale): stick a sinistra · trascina a destra per guardare</p>
-    <div><button class="btn" id="bStart">TOCCA PER INIZIARE</button><button class="btn" id="bCont">CONTINUA</button><button class="btn" id="bNew">NUOVA PARTITA</button></div>
+    <p>Ti svegli in una casa che non riconosci.<br>Ogni mattina, sotto la porta, c'è un nastro nuovo.</p>
+    <div class="menu"><button class="btn" id="bCont">CONTINUA</button><button class="btn" id="bStart">NUOVA PARTITA</button><button class="btn" id="bHow">COME SI GIOCA</button></div>
     <div id="cloud">Cloud: …</div>
     <div id="credit">Creato da GlitchCraft</div>
   </div>
+  <div class="modal" id="press"><div class="ins">▶ TOCCA PER INSERIRE IL NASTRO</div><small>consigliate le cuffie · gioca in orizzontale</small></div>
+  <div class="modal" id="journal"><div id="jPage"></div></div>
 </div>
 <div id="loading">Caricamento nastro…</div>
 <div id="rotate">Ruota il telefono in orizzontale<br>per giocare.</div>
@@ -327,7 +354,7 @@ frameX(5,2.0,3.0,2.1,M.trim);doorPanelX(5,2.0,3.0,2.1,M.door,false,'a',-1);
 frameX(5,7.5,8.4,2.1,M.trim);doorPanelX(5,7.5,8.4,2.1,M.door,false,'b',-1);
 frameX(5,10.8,12.2,2.3,M.trim);
 frameZ(6,3.7,4.6,2.1,M.trim);
-frameX(6.6,3.8,4.7,2.1,M.trim);doorPanelX(6.6,3.8,4.7,2.1,M.door,false,'a',1);
+frameX(6.6,3.8,4.7,2.1,M.trim);doorPanelX(6.6,3.8,4.7,2.1,M.door,false,'b',1);
 frameX(6.6,6.0,6.85,2.1,M.trim);doorPanelX(6.6,6.0,6.85,2.1,M.door,false,'a',1);
 frameX(6.6,10.5,11.35,2.1,M.trim);doorPanelX(6.6,10.5,11.35,2.1,M.door,true,'a',-1);
 frameZ(13,2.0,3.0,2.15,M.trimD);doorPanelZ(13,2.0,3.0,2.15,M.door,-1);
@@ -432,10 +459,13 @@ B(8,2.66,2.5,1.0,.04,.12,M.neon);
 // telecamera nascosta sopra il pensile
 const hidCam=new THREE.Group();hidCam.position.set(6.3,2.26,.3);B(0,0,0,.12,.08,.1,M.black,{parent:hidCam});cyl(.07,0,0,.025,.025,.04,M.plastic,10,hidCam).rotation.z=Math.PI/2;B(.03,.035,.04,.012,.012,.01,M.red,{parent:hidCam});hidCam.rotation.y=-.8;scene.add(hidCam);hidCam.visible=false;
 
+const calTex=ctex(64,80,(g,w,h)=>{g.fillStyle='#e9e4d4';g.fillRect(0,0,w,h);g.fillStyle='#7c1111';g.fillRect(0,0,w,14);g.fillStyle='#fff';g.font='bold 8px monospace';g.fillText('NOV 1998',12,10);g.fillStyle='#333';g.font='7px monospace';let d=1;for(let r=0;r<5;r++)for(let c=0;c<7;c++){if(d>30)break;if(r===0&&c<6)continue;g.fillText(String(d),3+c*9,26+r*11);d++;}g.strokeStyle='#c00';g.lineWidth=1.5;g.beginPath();g.arc(5,34,5,0,7);g.stroke();g.fillStyle='#c00';g.fillText('IL NASTRO',8,76);},40,false);
+plane(9.925,1.55,2.0,.3,.38,lam({map:calTex}),0,-Math.PI/2);
+plane(6.95,.907,.42,.06,.12,lam({color:0xe8e6dc}),-Math.PI/2,0).rotation.z=.4;
 /* ---------- INGRESSO ---------- */
 plane(12.5,.005,2.5,.6,.9,lam({color:0x3a2e22}),-Math.PI/2);
 B(10.25,.45,1.3,.36,.9,1.0,M.wood,{col:1,occ:1,tile:.6});
-B(10.25,.95,1.2,.18,.1,.22,M.black);B(10.25,1.02,1.12,.05,.05,.2,M.black);
+B(10.25,.95,1.2,.18,.1,.22,M.black);B(10.25,1.02,1.12,.05,.05,.2,M.black);plane(10.28,.902,1.6,.1,.14,lam({color:0xd8d2c0}),-Math.PI/2,0).rotation.z=-.3;
 cyl(12.7,.85,.35,.02,.02,1.7,M.trimD,6);cyl(12.7,.02,.35,.18,.18,.04,M.trimD);
 cyl(12.62,1.25,.35,.14,.18,.8,lam({color:0x1c1f24}),10);cyl(12.78,1.35,.4,.12,.15,.6,lam({color:0x2d2219}),10);
 colliders.push([12.45,.1,12.95,.6]);
@@ -456,9 +486,17 @@ B(1.8,.6,10.55,.6,.12,.36,M.pillow);B(2.6,.6,10.55,.6,.12,.36,M.pillow);
 const blanket=B(2.2,.58,9.55,1.68,.06,1.45,M.blanket);
 const blanketUp=B(2.2,.66,9.6,.55,.14,1.3,M.blanket);blanketUp.visible=false;
 for(const nx of [1.05,3.35]){B(nx,.27,10.7,.45,.55,.4,M.wood,{col:1});cyl(nx,.62,10.7,.05,.07,.12,M.black,10);cyl(nx,.78,10.7,.08,.13,.18,M.shade,12);}
-B(4.66,1.0,7.8,.62,2.0,1.4,M.wood,{col:1,occ:1,tile:.6});B(4.34,1.0,7.8,.01,1.9,.01,M.black);B(4.34,1.05,7.7,.02,.15,.02,M.brass);B(4.34,1.05,7.9,.02,.15,.02,M.brass);
+B(4.66,1.0,9.6,.62,2.0,1.4,M.wood,{col:1,occ:1,tile:.6});B(4.34,1.0,9.6,.01,1.9,.01,M.black);B(4.34,1.05,9.5,.02,.15,.02,M.brass);B(4.34,1.05,9.7,.02,.15,.02,M.brass);
+// scrivania con il monitor delle telecamere
+B(4.62,.74,8.1,.6,.04,1.0,M.woodL,{col:1});for(const dz of[-.45,.45])B(4.62,.36,8.1+dz,.55,.72,.04,M.woodL);
+B(4.74,.98,8.1,.4,.44,.42,M.plastic,{occ:1});
+const monC=document.createElement('canvas');monC.width=128;monC.height=96;const monG=monC.getContext('2d');const monTex=new THREE.CanvasTexture(monC);monTex.colorSpace=THREE.SRGBColorSpace;
+function paintMon(){monG.fillStyle='#050805';monG.fillRect(0,0,128,96);for(let i=0;i<4;i++){const x=(i%2)*64,y=(i>>1)*48;for(let k=0;k<160;k++){const v=(Math.random()*90)|0;monG.fillStyle=`rgb(${v},${v+10},${v})`;monG.fillRect(x+2+Math.random()*60,y+2+Math.random()*44,2,1);}monG.fillStyle='#9f9';monG.font='9px monospace';monG.fillText('CAM '+(i+1),x+4,y+11);}monG.fillStyle='#000';monG.fillRect(63,0,2,96);monG.fillRect(0,47,128,2);monG.fillStyle='#f33';monG.fillText('● REC',90,92);monTex.needsUpdate=true;}
+paintMon();
+plane(4.535,.99,8.1,.34,.27,new THREE.MeshBasicMaterial({map:monTex,color:0x9aa89a}),0,-Math.PI/2);
+B(4.53,.99,8.1,.005,.33,.38,M.black);
 plane(3.6,.004,8.6,1.0,1.6,M.rug,-Math.PI/2);
-picZ(4.92,1.6,9.8,.5,.4,M.photo2,-1);
+picZ(.08,1.6,10.0,.5,.4,M.photo2,1);
 const sleeper=new THREE.Group();scene.add(sleeper);sleeper.visible=false;
 
 /* ---------- BAGNO ---------- */
@@ -580,6 +618,44 @@ const sfx={
   whirr(){hit(1.2,600,3,.15,'bandpass',300);}
 };
 
+/* =============== MUSICA DEL MENU (procedurale) =============== */
+const music={on:false,timer:null,step:0,next:0,
+  MEL:[12,null,15,19,17,null,15,null,12,null,10,12,7,null,null,null,12,null,15,19,22,null,19,17,15,null,14,null,12,null,null,null,
+       8,null,12,15,14,null,12,null,10,null,8,7,5,null,7,null,3,null,7,10,8,null,7,5,3,null,2,null,0,null,null,null],
+  start(){
+    if(!A.ctx||this.on)return;this.on=true;const c=A.ctx;
+    this.bus=c.createGain();this.bus.gain.value=0;this.bus.connect(A.master);this.bus.gain.setTargetAtTime(.6,c.currentTime,1.2);
+    const d=c.createDelay(2);d.delayTime.value=.42;const fb=c.createGain();fb.gain.value=.45;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2000;
+    this.echo=c.createGain();this.echo.gain.value=.8;this.echo.connect(d);d.connect(lp);lp.connect(fb);fb.connect(d);lp.connect(this.bus);
+    this.nodes=[];
+    [[55,'sawtooth',.05],[55.35,'sawtooth',.05],[82.4,'triangle',.035],[41.2,'sine',.08]].forEach(([fq,ty,v],i)=>{
+      const o=c.createOscillator();o.type=ty;o.frequency.value=fq;const g=c.createGain();g.gain.value=v;
+      const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=200;const l=c.createOscillator();l.frequency.value=.05+i*.03;const lg=c.createGain();lg.gain.value=110;
+      l.connect(lg);lg.connect(fl.frequency);o.connect(fl);fl.connect(g);g.connect(this.bus);o.start();l.start();this.nodes.push(o,l);});
+    this.wow=c.createOscillator();this.wow.frequency.value=.55;this.wowG=c.createGain();this.wowG.gain.value=16;this.wow.connect(this.wowG);this.wow.start();this.nodes.push(this.wow);
+    this.next=c.currentTime+.6;this.step=0;this.timer=setInterval(()=>this.tick(),90);
+  },
+  tick(){const c=A.ctx;if(!c)return;while(this.next<c.currentTime+.3){this.note(this.step,this.next);this.next+=.55;this.step++;}},
+  note(st,t){
+    const c=A.ctx,m=this.MEL[st%this.MEL.length];
+    if(st%64===44){const n=c.createBufferSource();n.buffer=A.nb;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(250,t);f.frequency.exponentialRampToValueAtTime(3200,t+3.2);f.Q.value=5;const g=c.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.14,t+3);g.gain.exponentialRampToValueAtTime(.0001,t+3.3);n.connect(f);f.connect(g);g.connect(this.bus);n.start(t);n.stop(t+3.4);}
+    if(st%32===0){const o=c.createOscillator();o.frequency.setValueAtTime(70,t);o.frequency.exponentialRampToValueAtTime(30,t+1.2);const g=c.createGain();g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+1.4);o.connect(g);g.connect(this.bus);o.start(t);o.stop(t+1.5);}
+    if(m===null||m===undefined)return;
+    if(Math.random()<.06)return; // nota mancante: il nastro è rovinato
+    const fq=220*Math.pow(2,m/12);
+    [[1,.08,1.7],[2.01,.03,1.1],[3.98,.012,.6]].forEach(([h,v,dur])=>{
+      const o=c.createOscillator();o.type='sine';o.frequency.value=fq*h;this.wowG.connect(o.detune);
+      const g=c.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      o.connect(g);g.connect(this.bus);g.connect(this.echo);o.start(t);o.stop(t+dur+.05);
+      o.onended=()=>{try{this.wowG.disconnect(o.detune);}catch(e){}};
+    });
+  },
+  stop(){
+    if(!this.on)return;this.on=false;clearInterval(this.timer);const c=A.ctx,b=this.bus,nodes=this.nodes;
+    b.gain.setTargetAtTime(0,c.currentTime,.5);setTimeout(()=>{try{nodes.forEach(o=>o.stop());b.disconnect();}catch(e){}},2500);
+  }
+};
+
 /* =============== CLOUD (Firebase Realtime DB) + salvataggio locale =============== */
 const Cloud={ok:false,db:null,fns:null,uid:null};
 /* id giocatore = uid dell'accesso anonimo Firebase (le regole lo richiedono) */
@@ -640,12 +716,14 @@ const NOTES={
   t2:{s:'a',t:'BAGNO 02:05\n\nTU PARLI ALLO SPECCHIO\n\nNON ASCOLTARTI'},
   n4:{s:'b',t:'SE TI VEDI DORMIRE,\nNON SVEGLIARTI.\n— io'},
   n5:{s:'b',t:'LO SPECCHIO MENTE.\nCONTROLLA I TATUAGGI.\n— io'},
+  istr:{s:'a',t:'(scotch sul monitor, inchiostro rosso)\n\nQUANDO DORMI SEI DENTRO IL NASTRO.\nVEDI SOLO DALLE TELECAMERE.\n\nLUI SI MUOVE SOLO SE NESSUNO GUARDA.\nGUARDALO E SI FERMA.\nMA OGNI SGUARDO LO NUTRE.\n\nRESISTI FINO ALLE 6.'},
+  istr2:{s:'a',t:'(sotto il primo, più storto)\n\nSE IL TUO CORPO SI ALZA\nNON FARLO ARRIVARE ALLA PORTA.\n\nGUARDALO, O SVEGLIATI.\nTI SVEGLI SOLO DUE VOLTE.'},
   n6:{s:'f',t:'LA CHIAVE È NEL VASO\nDEL SALOTTO.\nESCI PRIMA DELLE 3.\n— io'}
 };
 const DEATH_TAT=['NON GUARDARLO IN FACCIA','CONTA I PASSI DEL SONNAMBULO','NON FIDARTI DI TE','LA CASA RICORDA'];
 const FAIL_TXT={ent:'Qualcuno era già accanto al letto.',luc:'Hai guardato troppo. La mente cede.',door:'La porta si apre. Fuori non c\'è mai stato niente.',ent2:'Non lo hai guardato abbastanza. Ti ha trovato.'};
 const E2={0:[[4.6,10.6],[3.9,9.9]],1:[[11,5.8],[2.2,5.8]],2:[[.8,.9],[2.3,2.5]],3:[[9.6,3.7],[7.4,2.0]]};
-const WALK=[[3.3,9.6],[4.05,7.4],[4.25,5.8],[11.5,5.8],[11.5,4.0],[12.45,2.5]];
+const WALK=[[3.3,9.6],[3.9,7.8],[4.15,6.9],[4.25,5.8],[11.5,5.8],[11.5,4.0],[12.45,2.5]];
 let WALKLEN=0;const WSEG=[];for(let i=1;i<WALK.length;i++){const l=Math.hypot(WALK[i][0]-WALK[i-1][0],WALK[i][1]-WALK[i-1][1]);WSEG.push(l);WALKLEN+=l;}
 function walkPos(q){let d=clamp(q,0,1)*WALKLEN;for(let i=0;i<WSEG.length;i++){if(d<=WSEG[i]){const u=d/WSEG[i];return[lerp(WALK[i][0],WALK[i+1][0],u),lerp(WALK[i][1],WALK[i+1][1],u)];}d-=WSEG[i];}return WALK[WALK.length-1];}
 const SOFA=[3,2.85,-Math.PI/2];
@@ -690,15 +768,107 @@ function showNote(key,cb){
   lockMode();modal='note';noteCb=cb||null;const n=NOTES[key];
   const pe=$('paper');pe.className=n.s;pe.textContent=n.t;$('note').style.display='flex';sfx.click();
 }
-function openArms(){
-  if(mode!=='day')return;lockMode();modal='arms';
-  const L=$('armL'),R=$('armR');L.textContent='';R.textContent='';
-  const t=G.tattoos;
-  if(!t.length){L.innerHTML='<span class="ink" style="opacity:.4">pelle pulita</span>';}
-  t.forEach((s,i)=>{const d=document.createElement('div');d.className='ink';d.textContent=s;((i%2)?R:L).appendChild(d);});
-  R.style.opacity=t.length<2?.35:1;
-  $('armsView').style.display='flex';
+/* braccia vere in 3D, attaccate alla telecamera; i tatuaggi sono scritti a penna sulla pelle */
+scene.add(pcam);
+const armsG=new THREE.Group();armsG.visible=false;pcam.add(armsG);
+const armLight=new THREE.PointLight(0xffd8b8,0,2.5,1.2);armLight.position.set(0,.15,.05);pcam.add(armLight);
+function skinTex(lines){
+  const c=document.createElement('canvas');c.width=512;c.height=1024;const g=c.getContext('2d');const r=rng(lines.length*31+7);
+  g.fillStyle='#c4977a';g.fillRect(0,0,512,1024);
+  for(let i=0;i<9000;i++){g.fillStyle=`rgba(${r()<.5?'110,60,45':'235,195,165'},${(r()*.09).toFixed(3)})`;g.fillRect(r()*512,r()*1024,2,2);}
+  g.strokeStyle='rgba(70,80,130,.16)';g.lineWidth=4;for(let i=0;i<3;i++){g.beginPath();let x=200+i*55;g.moveTo(x,0);for(let y=0;y<=1024;y+=48){x+=(r()-.5)*26;g.lineTo(x,y);}g.stroke();}
+  for(let i=0;i<350;i++){g.strokeStyle='rgba(60,35,25,.25)';g.lineWidth=1;const x=r()*512,y=r()*1024;g.beginPath();g.moveTo(x,y);g.lineTo(x+(r()-.5)*4,y+6+r()*5);g.stroke();}
+  g.save();g.translate(256,430);g.rotate(-Math.PI/2);g.textAlign='center';g.textBaseline='middle';
+  lines.forEach((s,i)=>{
+    const fs=Math.max(40,Math.min(96,1500/Math.max(6,s.length)));
+    g.font=`${fs}px 'Reenie Beanie','Comic Sans MS',cursive`;
+    g.save();g.translate(0,(i-(lines.length-1)/2)*96);g.rotate((r()-.5)*.06);
+    g.fillStyle='rgba(15,22,48,.25)';g.fillText(s,2,3);g.fillStyle='rgba(18,26,58,.93)';g.fillText(s,0,0);
+    g.restore();
+  });
+  g.restore();
+  // gonfiore rosso attorno all'ultima scritta (fresca)
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return t;
 }
+function makeArm(side){
+  const outer=new THREE.Group(),g=new THREE.Group();outer.add(g);
+  const mat=new THREE.MeshLambertMaterial({color:0xffffff});const sk=lam({color:0xc4977a});
+  const fore=new THREE.Mesh(new THREE.CylinderGeometry(.033,.043,.36,24,1,false),mat);fore.position.y=.18;fore.scale.z=.82;g.add(fore);
+  const wrist=new THREE.Mesh(new THREE.SphereGeometry(.034,14,10),sk);wrist.position.y=.365;wrist.scale.set(1,.8,.7);g.add(wrist);
+  const palm=new THREE.Mesh(new THREE.BoxGeometry(.078,.095,.028),sk);palm.position.set(0,.41,0);g.add(palm);
+  for(let i=0;i<4;i++){const L=i===0||i===3?.045:.055;const f=new THREE.Mesh(new THREE.CapsuleGeometry(.0085,L,3,8),sk);f.position.set(-.027+i*.018,.47+L/2-.02,.004);f.rotation.x=.35;g.add(f);}
+  const th=new THREE.Mesh(new THREE.CapsuleGeometry(.0105,.04,3,8),sk);th.position.set(side*-.048,.395,.006);th.rotation.z=side*.75;g.add(th);
+  g.rotation.set(-.5,Math.PI,0);outer.rotation.z=side*.16;outer.position.set(side*.13,-.4,-.36);
+  outer.userData.mat=mat;outer.userData.fore=g;armsG.add(outer);return outer;
+}
+const armL=makeArm(-1),armR=makeArm(1);
+let armsT=0;
+function setArmTex(arm,lines){const m=arm.userData.mat;if(m.map)m.map.dispose();m.map=skinTex(lines);m.needsUpdate=true;}
+function openArms(){
+  if(mode!=='day')return;
+  const t=G.tattoos;setArmTex(armL,t.filter((_,i)=>i%2===0));setArmTex(armR,t.filter((_,i)=>i%2===1));
+  mode='arms';armsT=0;armsG.visible=true;$('hint').style.display='none';hintT=0;p.pitch=clamp(p.pitch,-.15,.15);hideDayBtns();show('obj',0);$('cross').style.display='none';
+  $('armsHint').textContent=t.length?'Le tue braccia — tocca per chiudere':'Pelle pulita. Per ora. — tocca per chiudere';$('armsHint').style.display='block';
+  sfx.click();
+}
+function closeArms(){if(mode!=='arms')return;mode='day';armsG.visible=false;armLight.intensity=0;$('armsHint').style.display='none';$('cross').style.display='block';}
+function updateArms(dt,ts){
+  armsT+=dt;const u=ease(clamp(armsT/.45,0,1));
+  armsG.position.set(Math.sin(ts/900)*.004,lerp(-.45,0,u)+Math.sin(ts/700)*.003,0);
+  armL.userData.fore.rotation.y=Math.PI+Math.sin(ts/1100)*.04;armR.userData.fore.rotation.y=Math.PI-Math.sin(ts/1300)*.04;
+  armLight.intensity=1.6*u;
+}
+
+/* =============== TACCUINO =============== */
+const CLUES=[
+ {f:'read_n1',t:'Post-it giallo (tavolino): «Alle tre devi essere a letto. Sempre». Calligrafia ordinata, a matita. Firmato «— io».'},
+ {f:'read_n2',t:'Post-it giallo (frigo): «Non fidarti dei nastri. Li manda lui». Stessa calligrafia ordinata.'},
+ {f:'read_n3',t:'Post-it giallo (porta): «La porta d\'ingresso non si apre. Non provarci».'},
+ {f:'got_t1',t:'Nastro 1, etichetta in inchiostro rosso: «Cucina 03:12 — Guarda dietro di te — Scappa». Scrittura storta, frettolosa. Non sembra la stessa mano dei post-it.'},
+ {f:'seenT1',t:'Nel nastro 1 ci sei tu, in cucina alle 03:12. Una figura altissima è dietro di te. Non ti volti.'},
+ {f:'got_cam',t:'Polaroid dentro la telecamera nascosta, inchiostro rosso: «I post-it non li scrivo io. Siamo in due».'},
+ {f:'seen_monitor',t:'In camera c\'è un monitor collegato alle telecamere. Qualcuno ci ha attaccato istruzioni in rosso.'},
+ {f:'seen_bill',t:'Bolletta mai aperta, intestata a «D. ——». Il resto del nome è grattato via. Novembre 1998.'},
+ {f:'seen_receipt',t:'Scontrino: «Videonoleggio Stella — svendita per chiusura. 1 VHS senza titolo, L. 1.000».'},
+ {f:'seen_cal',t:'Calendario fermo a novembre 1998. Il 2 è cerchiato. Sotto, con la tua calligrafia storta: «IL NASTRO».'},
+ {f:'seen_window',t:'Fuori dalle finestre non c\'è niente. Né case né cielo. Solo nero.'},
+ {f:'seen_front',t:'La porta d\'ingresso è chiusa dall\'esterno. Dall\'altra parte qualcuno respira.'},
+ {f:'seen_studio',t:'Lo studio è chiuso. Sotto la porta pulsa una luce azzurra, come uno schermo acceso.'},
+ {f:'read_n4',t:'Post-it giallo (comodino): «Se ti vedi dormire, non svegliarti». Calligrafia ordinata.'},
+ {f:'read_n5',t:'Post-it giallo (specchio): «Lo specchio mente. Controlla i tatuaggi».'},
+ {f:'read_n6',t:'Post-it giallo (corridoio): «La chiave è nel vaso del salotto. Esci prima delle 3». Calligrafia ordinata… ma è scritto a penna blu. Tutti gli altri erano a matita.'},
+ {f:'seen_vase',t:'Nel vaso non c\'era nessuna chiave. Solo acqua nera. Il post-it blu mentiva.'},
+ {f:'got_t2',t:'Nastro 2, inchiostro rosso: «Bagno 02:05 — Tu parli allo specchio — Non ascoltarti».'},
+ {f:'seenT2',t:'Nel nastro 2 sei fermo davanti allo specchio. Qualcuno con la tua faccia si muove dietro di te.'},
+ {f:'mirror2',t:'Nello specchio c\'è un tatuaggio che sul tuo braccio non c\'è: «Quello nello specchio aspetta».'}
+];
+const QUESTIONS=[
+ {q:'Chi sono?',a:F=>F.seen_bill?'Una «D.» su una bolletta. Il resto del nome è grattato via. Da chi?':null},
+ {q:'Chi scrive i post-it gialli?',a:F=>F.got_cam?'«Non li scrivo io», dice la polaroid. Eppure è la mia calligrafia.':(F.read_n1?'Sono firmati «io». Non ricordo di averli scritti.':null)},
+ {q:'Chi scrive in rosso?',a:F=>F.got_cam?'Qualcuno che mi avverte. Ha fretta. Ogni volta scrive peggio.':null},
+ {q:'Chi mi riprende?',a:F=>F.got_cam?'Ci sono telecamere nascoste. Qualcuno le ha messe apposta.':null},
+ {q:'Perché non posso uscire?',a:F=>F.seen_window?'Fuori non c\'è niente. Forse non c\'è mai stato.':null},
+ {q:'Di chi posso fidarmi?',a:F=>F.seen_vase?'Non di tutti i post-it. Uno era blu, e mentiva.':null}
+];
+function openJournal(how){
+  const F=G.flags;let h='';
+  if(how){
+    h=`<h3>COME SI GIOCA</h3>
+<p><b>DI SERA</b> esplori la casa: leggi i post-it, trova i nastri VHS e guardali nel videoregistratore del salotto. Il <b>Taccuino [J]</b> tiene l'obiettivo, gli indizi e le domande ancora aperte.</p>
+<p><b>DI NOTTE</b> dormi, e vedi la casa solo dalle telecamere. Le cose si muovono solo quando nessuno le guarda: inquadrale e si fermano. Ma guardare consuma la <b>LUCIDITÀ</b>. Quando un pulsante telecamera lampeggia, lì sta succedendo qualcosa. Resisti fino alle 06:00.</p>
+<p><b>SE MUORI</b> ti risvegli la sera prima, con una scritta nuova sul braccio. Le scritte sono consigli: leggile con <b>Braccia [B]</b>.</p>
+<p><b>COMANDI</b> — Telefono: stick a sinistra, trascina a destra per guardare, pulsante in basso a destra per interagire. PC: WASD, mouse, E, B, J, 1-6, Spazio.</p>`;
+  }else{
+    h+=`<h3>OBIETTIVO</h3><p>${objText()}</p>`;
+    const cl=CLUES.filter(c=>F[c.f]);
+    h+=`<h3>INDIZI (${cl.length})</h3>`+(cl.length?'<ul>'+cl.map(c=>'<li>'+c.t+'</li>').join('')+'</ul>':'<p class="dim">Ancora niente. Guardati intorno.</p>');
+    h+='<h3>DOMANDE</h3><ul>'+QUESTIONS.map(q=>{const a=q.a(F);return `<li class="q"><b>${q.q}</b> ${a?a:'<span class="dim">…</span>'}</li>`;}).join('')+'</ul>';
+    if(G.tattoos.length)h+='<h3>SUL BRACCIO</h3><ul>'+G.tattoos.map(t=>'<li>«'+t+'»</li>').join('')+'</ul>';
+  }
+  h+='<div class="close">tocca per chiudere</div>';
+  $('jPage').innerHTML=h;lockMode();modal='journal';$('journal').style.display='flex';sfx.click();
+}
+$('journal').addEventListener('click',()=>{if(modal==='journal')closeModal();});
 function openMirror(after){
   lockMode();modal='mirror';modalCb=after||null;const f=$('mirFrame');f.textContent='';
   const t=G.tattoos.length?G.tattoos:['(niente)'];
@@ -707,7 +877,7 @@ function openMirror(after){
 }
 function closeModal(){
   const m=modal;modal=null;
-  ['txt','note','armsView','mirrorView'].forEach(id=>$(id).style.display='none');
+  ['txt','note','armsView','mirrorView','journal'].forEach(id=>$(id).style.display='none');
   mode=prevMode;
   let cb=null;
   if(m==='txt'){cb=txtCb;txtCb=null;}
@@ -725,7 +895,9 @@ let stickId=null,so={x:0,y:0},sv={x:0,y:0},lookId=null,lx=0,ly=0;
 addEventListener('keydown',e=>{
   keys[e.code]=true;
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
-  if(mode==='title')return;
+  if(mode==='title'||mode==='press')return;
+  if(mode==='arms'){if(['KeyB','KeyE','Enter','Space','Escape'].includes(e.code))closeArms();return;}
+  if(e.code==='KeyJ'){if(modal==='journal')closeModal();else if(mode==='day')openJournal();return;}
   if(e.code==='KeyE'||e.code==='Enter'){if(modal)modalTap();else doUse();}
   else if(e.code==='Space'){if(modal)modalTap();else wake();}
   else if(e.code==='KeyB')openArms();
@@ -737,6 +909,7 @@ addEventListener('blur',()=>{for(const k in keys)keys[k]=false;});
 addEventListener('contextmenu',e=>e.preventDefault());
 const app=$('app');
 app.addEventListener('pointerdown',e=>{
+  if(mode==='arms'){closeArms();return;}
   if(e.target.closest&&e.target.closest('.btn,.modal'))return;
   if(mode!=='day')return;
   if(e.pointerType!=='mouse'&&e.clientX<innerWidth*.45&&stickId===null){
@@ -759,8 +932,8 @@ function pend(e){
   if(e.pointerId===lookId)lookId=null;
 }
 addEventListener('pointerup',pend);addEventListener('pointercancel',pend);
-$('bFull').onclick=goFull;$('bArms').onclick=openArms;$('bUse').onclick=()=>doUse();$('bWake').onclick=()=>wake();
-$('bSkip').onclick=()=>{if(tp)tp.t=tp.def.dur;};
+$('bFull').onclick=goFull;$('bArms').onclick=()=>{if(mode==='arms')closeArms();else openArms();};$('bJour').onclick=()=>{if(mode==='day')openJournal();};$('bUse').onclick=()=>doUse();$('bWake').onclick=()=>wake();
+$('bSkip').onclick=()=>{if(tp)tp.t=tp.def.dur;else if(IN)endIntro();};
 
 /* =============== OGGETTI INTERATTIVI =============== */
 const itemGroup=new THREE.Group();scene.add(itemGroup);
@@ -796,27 +969,38 @@ function buildDay(){
   zones.push({id:'window',x:.4,y:2.9,r:1.2,label:'Guarda fuori'});
   zones.push({id:'window',x:.4,y:8.2,r:1.2,label:'Guarda fuori'});
   zones.push({id:'fridge',x:9.5,y:1.0,r:1.0,label:'Apri il frigo'});
+  zones.push({id:'monitor',x:4.15,y:8.1,r:1.1,label:'Guarda il monitor'});
+  zones.push({id:'calendar',x:9.4,y:2.0,r:1.1,label:'Guarda il calendario'});
+  zones.push({id:'receipt',x:6.95,y:.9,r:.9,label:'Leggi lo scontrino'});
+  zones.push({id:'bill',x:10.5,y:1.6,r:.9,label:'Guarda la busta'});
+  zones.push({id:'books',x:.8,y:.8,r:1.0,label:'Guarda la libreria'});
   if(F.read_n6)zones.push({id:'vase',x:5.5,y:1.3,r:1.3,label:'Controlla il vaso'});
   tvMode=0;
 }
 function objText(){
   const F=G.flags,n=G.night;
   if(n===1){
-    if(!F.got_t1)return 'Cerca un nastro VHS (ingresso). Leggi i post-it.';
-    if(!F.seenT1)return 'Metti il nastro nel videoregistratore (salotto).';
-    return F.got_cam?'Hai la prova. Quando sei pronto, vai a letto.':'Il nastro è ripreso dall\'alto in cucina. Trova la telecamera, poi vai a letto.';
+    if(!F.read_n1)return 'Leggi il post-it sul tavolino davanti al divano.';
+    if(!F.got_t1)return 'Esplora la casa. Qualcuno ha infilato qualcosa sotto la porta d\'ingresso.';
+    if(!F.seenT1)return 'Hai un nastro VHS. Guardalo: videoregistratore sotto la TV del salotto.';
+    if(!F.got_cam)return 'Il nastro è stato girato in cucina, dall\'alto. Trova la telecamera nascosta.';
+    return 'Qualcuno ti spia, e i post-it forse non sono tuoi. Stanotte scopri chi entra in camera. Vai a letto.';
   }
-  if(!F.got_t2)return 'Hai un tatuaggio nuovo. Leggilo (Braccia) e cerca.';
-  if(!F.seenT2)return 'Metti il nuovo nastro nel videoregistratore.';
-  return F.mirror2?'Quando sei pronto, vai a letto.':'Controlla lo specchio del bagno. Poi a letto.';
+  if(!F.got_t2)return 'Ti sei svegliato con una scritta sul braccio. Leggila (Braccia) e segui l\'indizio.';
+  if(!F.seenT2)return 'Un altro nastro. Guardalo nel videoregistratore del salotto.';
+  if(!F.mirror2)return 'Il nastro parla dello specchio del bagno. Vai a guardarti.';
+  return 'Stanotte qualcosa userà il tuo corpo. Vai a letto e non perderlo di vista.';
 }
 function updateObj(){$('obj').textContent=objText();}
-function beginDay(lines,pos){
+function beginDay(lines,pos,cb){
   buildDay();mode='day';modal=null;setStyle('day');hideNight();
   if(pos){p.x=pos[0];p.y=pos[1];p.a=pos[2];p.pitch=0;}
   updateObj();saveState();
-  if(lines&&lines.length)showText(lines);
+  if(lines&&lines.length)showText(lines,cb);
 }
+let hintT=0;
+function showHint(m,ms){const h=$('hint');h.textContent=m;h.style.display='block';hintT=ms||6000;}
+function nightHint(k,m,ms){if(!N||N.hinted[k])return;N.hinted[k]=1;if(G.flags['hint_'+k+N.num]&&G.deaths>0&&k!=='start')return;G.flags['hint_'+k+N.num]=1;showHint(m,ms||7000);}
 function setStyle(s){cv.className=s==='cam'?'mono':'';if(!staticOn)nz.style.opacity=s==='day'?.05:.15;$('cross').style.display=s==='day'?'block':'none';}
 function findCand(){
   let best=null,bd=99;
@@ -832,15 +1016,15 @@ function doUse(){
 }
 function useItem(it){
   const F=G.flags;
-  if(it.kind==='note'){F['read_'+it.id]=1;showNote(it.id,()=>{if(it.id==='n6'){buildDay();}saveState();});return;}
+  if(it.kind==='note'){F['read_'+it.id]=1;showNote(it.id,()=>{if(it.id==='n6'){buildDay();}updateObj();saveState();if(it.id==='n1'&&!F.hintJ){F.hintJ=1;showHint('Ogni indizio finisce nel Taccuino (in alto a destra). Lì trovi anche cosa fare.',6000);}});return;}
   if(it.kind==='tape'){
     F['got_'+it.id]=1;items=items.filter(i=>i!==it);if(it.mesh)itemGroup.remove(it.mesh);sfx.click();
-    showNote(it.id,()=>{toast('Nastro preso — mettilo nel videoregistratore');updateObj();saveState();if(it.id==='t2')scareBed();});return;
+    showNote(it.id,()=>{toast('Nastro preso — guardalo nel videoregistratore del salotto');updateObj();saveState();if(it.id==='t2')scareBed();});return;
   }
   if(it.kind==='cam'){
     F.got_cam=1;items=items.filter(i=>i!==it);hidCam.visible=false;
     showText(['Una videocamera nascosta sopra il pensile. La lucina rossa è accesa.','Dentro c\'è una polaroid.'],()=>{
-      showNote('pol1',()=>{sfx.boom(.4);sfx.knock();dayBright=.2;updateObj();saveState();toast('Hai trovato la prova.');});
+      showNote('pol1',()=>{sfx.boom(.4);sfx.knock();dayBright=.2;updateObj();saveState();showHint('Qualcuno ti filma davvero, e forse in casa non sei solo. Stanotte guarda dalle telecamere.',7000);});
     });
   }
 }
@@ -856,14 +1040,24 @@ function useZone(z){
     case 'bed':{
       const need=n===1?F.seenT1:F.seenT2;
       if(!need){showText(['Non puoi dormire. Non ancora.',n===1?'Prima devi guardare il nastro.':'Prima devi guardare il nuovo nastro.']);}
-      else showText(['Sono le 23:40. Spegni la luce.','Se hai fatto bene i conti, domani saprai dove guardare.'],()=>startNight());
+      else{
+        const go=()=>showText(['23:40. Ti sdrai. Il monitor sulla scrivania resta acceso.','Chiudi gli occhi… e la casa la vedi lo stesso. Da dove guardano le telecamere.'],()=>startNight());
+        if(!F.briefed){F.briefed=1;F.seen_monitor=1;saveState();showText(['Prima di spegnere la luce, noti il foglio attaccato al monitor.'],()=>showNote('istr',go));}
+        else if(n>=2&&!F.briefed2){F.briefed2=1;saveState();showText(['Sul foglio del monitor c\'è una riga nuova.'],()=>showNote('istr2',go));}
+        else go();
+      }
       break;}
-    case 'front':sfx.knock();showText(['Chiusa a chiave. La serratura è dall\'esterno.','Dall\'altra parte della porta senti qualcuno respirare.','Forse sei tu.']);break;
+    case 'front':F.seen_front=1;sfx.knock();showText(['Chiusa a chiave. La serratura è dall\'esterno.','Dall\'altra parte della porta senti qualcuno respirare.','Forse sei tu.']);break;
     case 'cellar':dayBright=.25;sfx.knock();showText(['Il chiavistello è arrugginito, non si muove.','Dall\'altra parte c\'è silenzio. Troppo.','Poi, piano, qualcosa bussa due volte. Dall\'interno.']);break;
-    case 'studio':showText(['Lo studio. Chiuso a chiave.','Sotto la porta passa una luce azzurra che pulsa, come uno schermo acceso.']);break;
-    case 'window':showText(['Fuori non c\'è niente.','Né lampioni, né case, né cielo. Solo nero, come un televisore spento.']);break;
+    case 'studio':F.seen_studio=1;showText(['Lo studio. Chiuso a chiave.','Sotto la porta passa una luce azzurra che pulsa, come uno schermo acceso.']);break;
+    case 'window':F.seen_window=1;showText(['Fuori non c\'è niente.','Né lampioni, né case, né cielo. Solo nero, come un televisore spento.']);break;
     case 'fridge':showText(['Il frigo è quasi vuoto. Latte, un barattolo senza etichetta.','La data sul latte è di sei anni fa.']);break;
-    case 'vase':showText(['Il vaso è pieno d\'acqua nera. Nessuna chiave.','Il post-it in corridoio mentiva. Non l\'hai scritto tu.']);break;
+    case 'monitor':F.seen_monitor=1;saveState();showText(['Un vecchio monitor a quattro riquadri. Ogni riquadro è una stanza di questa casa.','Qualcuno ci ha attaccato un foglio con lo scotch.'],()=>showNote('istr',()=>{if(G.night>=2)showNote('istr2');}));break;
+    case 'calendar':F.seen_cal=1;showText(['Un calendario fermo a novembre 1998.','Il giorno 2 è cerchiato in rosso. Sotto, con una scrittura storta: «IL NASTRO».']);break;
+    case 'receipt':F.seen_receipt=1;showText(['Uno scontrino sbiadito.','«VIDEONOLEGGIO STELLA — SVENDITA PER CHIUSURA. 1 VHS senza titolo — L. 1.000».','Non ricordi di averlo comprato.']);break;
+    case 'bill':F.seen_bill=1;showText(['Una bolletta mai aperta.','Il destinatario è «D. ——». Il resto del nome è stato grattato via con un\'unghia.','Hai qualcosa sotto le unghie.']);break;
+    case 'books':showText(['Manuali di videocamere. Cassette vergini ancora nel cellophane.','Un libro con l\'angolo piegato: «Come accorgersi di essere osservati».']);break;
+    case 'vase':F.seen_vase=1;showText(['Il vaso è pieno d\'acqua nera. Nessuna chiave.','Il post-it in corridoio mentiva. Non l\'hai scritto tu.']);break;
     case 'mirror':
       if(n===2&&F.seenT2&&!F.mirror2){
         F.mirror2=1;G.tattoos.push('QUELLO NELLO SPECCHIO ASPETTA');saveState();updateObj();
@@ -959,7 +1153,7 @@ function setTapeActors(){
 }
 
 /* =============== NOTTE =============== */
-function hideNight(){['clock','camname','lucw','lucl','bWake','rec'].forEach(i=>show(i,0));$('cams').style.display='none';}
+function hideNight(){['clock','camname','lucw','lucl','bWake','rec','nobj'].forEach(i=>show(i,0));$('cams').style.display='none';}
 function startNight(){
   const num=G.night;
   N={num,t:0,len:CFG.len,cam:0,luc:100,cams:num===1?[0,1,2,3]:[0,1,2,3,4,5],
@@ -967,21 +1161,21 @@ function startNight(){
     ent2:{on:false,p:0,cam:0,x:0,y:0,g:ACT.ent2},
     walker:{on:false,q:0,x:3.3,y:9.6,seen:false},
     decoys:[],amb:{armed:false,done:false,active:false,t:0,g:ACT.amb,x:1.3,y:5.8},
-    sleeperUp:false,flick:{cam:-1,t:0},hb:0,wakes:2,wakeCd:0,fail:null,events:[]};
+    sleeperUp:false,flick:{cam:-1,t:0},hb:0,wakes:2,wakeCd:0,fail:null,events:[],hinted:{}};
   if(num===1){
     N.decoys.push({cam:3,t0:48,t1:80,limit:2.5,seen:0,gone:false,g:ACT.decoyE,x:9.0,y:1.35,face:[9.55,.3]});
     N.events.push({t:14,fn:()=>{N.flick={cam:1,t:3};sfx.knock();}});
     N.events.push({t:28,fn:()=>{tvMode=1;toast('Una TV si è accesa da qualche parte.');}});
     N.events.push({t:40,fn:()=>{sfx.boom(.9);shake(250);toast('…');}});
-    N.events.push({t:60,fn:()=>{N.entA.on=true;sfx.whisper();sfx.heart();toast('Il letto non è più solo.',3200);}});
+    N.events.push({t:60,fn:()=>{N.entA.on=true;sfx.whisper();sfx.heart();toast('Il letto non è più solo.',3200);nightHint('entA','Qualcosa è entrato in camera da letto (CAM 1). Guardalo: finché lo inquadri, arretra.',8000);}});
     N.events.push({t:96,fn:()=>{N.amb.armed=true;if(N.cam===1)triggerAmb();}});
   }else{
     N.decoys.push({cam:4,t0:30,t1:75,limit:4,seen:0,gone:false,g:ACT.decoyD,x:7.85,y:8.45,face:[8.6,8.45]});
     N.events.push({t:10,fn:()=>{N.flick={cam:1,t:3};sfx.knock();}});
-    N.events.push({t:55,fn:()=>{N.walker.on=true;N.sleeperUp=true;sfx.whisper();toast('Il tuo corpo si è alzato dal letto.',3500);}});
+    N.events.push({t:55,fn:()=>{N.walker.on=true;N.sleeperUp=true;sfx.whisper();toast('Il tuo corpo si è alzato dal letto.',3500);nightHint('walk','Il tuo corpo cammina verso la porta d\'ingresso. Seguilo di telecamera in telecamera: se lo guardi si ferma. Oppure premi SVEGLIATI.',9000);}});
     N.events.push({t:85,fn:()=>{
       let best=0,bv=1e9;for(let i=0;i<4;i++){const v=(G.stare['c'+i]||0)+Math.random()*3;if(v<bv){bv=v;best=i;}}
-      N.ent2.on=true;N.ent2.cam=best;sfx.heart();toast('Qualcosa sta cercando l\'angolo che guardi di meno.',3500);
+      N.ent2.on=true;N.ent2.cam=best;sfx.heart();toast('Qualcosa sta cercando l\'angolo che guardi di meno.',3500);nightHint('ent2','Qualcosa si muove nella stanza che hai guardato di meno. Cerca il pulsante che lampeggia.',8000);
     }});
   }
   mode='night';setStyle('cam');hidCam.visible=false;tvMode=0;
@@ -991,6 +1185,8 @@ function startNight(){
   N.cams.forEach(i=>{const b=document.createElement('button');b.className='btn';b.textContent=String(i+1);b.onclick=()=>selCam(i);cb.appendChild(b);});
   if(num===2){$('bWake').style.display='block';$('bWake').textContent='SVEGLIATI ('+N.wakes+')';}
   selCam(0,true);gset('hiss',.05,.2);gset('drone',.12,.8);
+  $('nobj').textContent='RESISTI FINO ALLE 06:00';show('nobj',1);
+  nightHint('start',num===1?'Vedi la casa dalle telecamere: cambiale con i pulsanti in basso (o 1-4). Tieni d\'occhio soprattutto la CAM 1, dove dormi.':'Ora hai 6 telecamere. Stanotte tieni d\'occhio il tuo letto.',9000);
   G.flags.nightsStarted=(G.flags.nightsStarted||0)+1;
 }
 function selCam(i,silent){
@@ -1072,6 +1268,14 @@ function updateNight(dt){
     if(on&&seen(d.g)){d.seen+=dt;drain+=CFG.drainDecoy;if(d.seen>=d.limit){d.gone=true;sfx.whisper();}}
   }
   if(N.amb.active){N.amb.t+=dt;if(N.cam!==1||N.amb.t>1.4)N.amb.active=false;}
+  // pulsanti che lampeggiano dove qualcosa si muove senza essere guardato
+  const warn=new Set();
+  if(E.on)warn.add(0);if(E2o.on)warn.add(E2o.cam);
+  if(Wk.on)warn.add(Wk.y>6.6?0:(Wk.y>5?1:5));
+  for(const d of N.decoys)if(N.t>=d.t0&&N.t<d.t1&&!d.gone){warn.add(d.cam);nightHint('decoy','Una figura immobile ti fissa da una telecamera. Alcune cose vogliono soltanto essere guardate.',7000);}
+  const bs=$('cams').children;for(let k=0;k<bs.length;k++)bs[k].classList.toggle('warn',warn.has(N.cams[k])&&N.cams[k]!==N.cam);
+  if(N.luc<55)nightHint('luc','Guardare ti consuma (LUCIDITÀ). Quando non c\'è niente da fermare, guarda una stanza vuota: si ricarica.',7000);
+  if(N.t>N.len-25)nightHint('end','Manca poco all\'alba. Resisti.',4000);
   if(drain>0)N.luc-=drain*dt;else N.luc=Math.min(100,N.luc+CFG.regen*dt);
   if(N.luc<=0){failNight('luc');return;}
   N.hb-=dt;if(N.luc<35&&N.hb<=0){sfx.heart();N.hb=.95;}
@@ -1108,10 +1312,10 @@ const MORN1=['06:00. Ti svegli sul pavimento del corridoio. Non ricordi di esser
 const MORN2=['06:00. Questa volta sei nel bagno, in piedi davanti allo specchio.','Il riflesso sorride un secondo dopo di te.','Sotto la porta c\'è un nastro nuovo. L\'etichetta dice: «TU, MENTRE LEGGI QUESTO».'];
 function winNight(){
   const n=N.num;saveRun('win');hideNight();hideActors();gset('hiss',0,.3);gset('drone',.05,.5);setStyle('day');
-  N=null;mode='trans';resetBed();
+  N=null;mode='trans';resetBed();$('hint').style.display='none';
   if(n===1){
     G.night=2;G.tattoos.push('SOTTO IL LETTO');p.x=2.5;p.y=5.8;p.a=0;p.pitch=0;saveState();
-    showText(MORN1,()=>{beginDay(null,[2.5,5.8,0]);toast('Nuovo tatuaggio — apri Braccia [B]',4000);});
+    showText(MORN1,()=>{beginDay(null,[2.5,5.8,0]);showHint('Hai una scritta nuova sul braccio. Leggila con il pulsante Braccia (in alto).',7000);});
   }else{
     G.night=3;G.tattoos.push('NON GUARDARE IL SETTIMO NASTRO');p.x=7.6;p.y=8.45;p.a=0;p.pitch=0;saveState();
     showText(MORN2,()=>endCard());
@@ -1123,6 +1327,50 @@ function endCard(){
   $('end').style.display='flex';
 }
 $('bAgain').onclick=()=>{$('end').style.display='none';G=newState();startGame(true);};
+
+/* =============== FILMATO INIZIALE =============== */
+const INTRO=[
+ {d:6,black:1,txt:'Questo nastro è stato trovato\nin un videonoleggio che chiudeva.\n\nNon aveva etichetta.'},
+ {d:6,cam:{p:[.4,1.75,5.8],t:[9,1.1,5.8]},move:[1.8,0,0],txt:'Mostra una casa. Di notte.',rec:'02-11-1998 02:58'},
+ {d:5,cam:{p:[2.6,2.5,6.76],t:[2.2,.2,10.2]},sleeper:1,txt:'Qualcuno dorme.',rec:'02-11-1998 03:04'},
+ {d:6,cam:{p:[2.6,2.5,6.76],t:[2.2,.2,10.2]},sleeper:1,ent:[3.45,9.55],face:[1.9,10.5],txt:'Qualcuno lo guarda dormire.',rec:'02-11-1998 03:09',glitch:[1.6,3.4,4.9]},
+ {d:5.5,cam:{p:[5.8,2.42,4.8],t:[1.8,.7,1.0]},tvOn:2.2,txt:'Alle 03:12 la TV si accende da sola.',rec:'02-11-1998 03:12'},
+ {d:3.4,cam:{p:[5.8,2.42,4.8],t:[1.8,.7,1.0]},tv:1,ent:[2.6,2.2],lunge:[4.9,4.1],scare:2.0,rec:'02-11-1998 03:12'},
+ {d:2.2,stat:1},
+ {d:7,black:1,txt:'Il nastro finisce qui.\n\nMa ogni notte va avanti di qualche minuto.\nE ogni mattina, in quella casa, qualcuno si sveglia\nsenza ricordare chi è.'}
+];
+let IN=null;
+function startIntro(){mode='intro';IN={i:0};music.stop();show('bSkip',1);$('cine').style.display='block';shotBegin();}
+function shotBegin(){
+  const sh=INTRO[IN.i];IN.t=0;IN.g={};IN.typed=-1;$('cine').textContent='';
+  $('blk').style.opacity=sh.black?1:0;setStatic(!!sh.stat);hideActors();tvMode=0;
+  cv.className=sh.black?'':'mono';show('rec',!!sh.rec);show('clock',!!sh.rec);if(sh.rec)$('clock').textContent=sh.rec;
+  gset('hiss',sh.stat?.3:(sh.black?.02:.07),.3);if(sh.stat)sfx.boom(.5);
+}
+function updateIntro(dt,ts){
+  const sh=INTRO[IN.i];IN.t+=dt;const t=IN.t;
+  if(sh.txt){const n=Math.min(sh.txt.length,Math.floor(t*26));if(n!==IN.typed){IN.typed=n;$('cine').textContent=sh.txt.slice(0,n);if(n%3===0&&n<sh.txt.length)hit(.02,3000,1,.04,'highpass');}}
+  if(sh.glitch)sh.glitch.forEach((gt,k)=>{if(!IN.g[k]&&t>=gt){IN.g[k]=1;glitchAmt=1;sfx.whisper();}});
+  if(sh.scare&&!IN.g.sc&&t>=sh.scare){IN.g.sc=1;sfx.boom(1.3);shake(500);flash(150);glitchAmt=1;}
+  if(sh.tvOn&&t>=sh.tvOn&&tvMode!==1){tvMode=1;sfx.clunk();gset('hiss',.16,.2);}
+  if(sh.tv)tvMode=1;
+  glitchAmt=Math.max(0,glitchAmt-dt*2);
+  if(sh.cam){
+    const u=t/sh.d,mv=sh.move||[0,0,0];setCam({p:[sh.cam.p[0]+mv[0]*u,sh.cam.p[1]+mv[1]*u,sh.cam.p[2]+mv[2]*u],t:sh.cam.t},70);
+    hideActors();sleeper.visible=!!sh.sleeper;blanketUp.visible=!!sh.sleeper;blanket.visible=!sh.sleeper;body.visible=false;
+    if(sh.ent){const g=ACT.ent;g.visible=!(glitchAmt>.3&&Math.random()<.3);let x=sh.ent[0],z=sh.ent[1];
+      if(sh.lunge&&t>=sh.scare-.5){const k=clamp((t-(sh.scare-.5))/.5,0,1);x=lerp(x,sh.lunge[0],k);z=lerp(z,sh.lunge[1],k);}
+      g.position.set(x,0,z);if(sh.face)faceTo(g,sh.face[0],sh.face[1]);else faceTo(g,sh.cam.p[0],sh.cam.p[2]);}
+    applyLights('night',ts);renderer.render(scene,scam);
+  }
+  if(t>=sh.d){IN.i++;if(IN.i>=INTRO.length)endIntro();else shotBegin();}
+}
+function endIntro(){
+  if(!IN)return;IN=null;$('cine').style.display='none';$('blk').style.opacity=0;setStatic(false);show('bSkip',0);hideNight();hideActors();resetBed();gset('hiss',0,.3);gset('drone',.05,.6);tvMode=0;
+  G=newState();G.flags.intro=1;p.x=SOFA[0];p.y=SOFA[1];p.a=SOFA[2];p.pitch=-.3;
+  beginDay(['Ti svegli sul divano. La TV è spenta, ma il ronzio no.','Non ricordi come ti chiami. Non ricordi come sei arrivato qui.','Davanti a te, sul tavolino, c\'è un post-it giallo.'],null,
+    ()=>showHint('Muoviti con lo stick a sinistra, guardati intorno trascinando a destra. Il pulsante in basso a destra serve per interagire.',9000));
+}
 
 /* =============== LUCI PER MODALITÀ =============== */
 function applyLights(preset,ts,room){
@@ -1224,10 +1472,26 @@ function updateNightView(ts){
   renderer.render(scene,scam);
   if(Math.random()<.01)glitchAmt=Math.max(glitchAmt,.4);
 }
+/* sfondo del menu: carrellata lenta e inquietante dentro la casa */
+const TITLE_PATH=[[[3.6,1.45,3.2],[2.8,.85,.5]],[[1.2,1.6,5.8],[10,1.2,5.8]],[[2.6,1.7,7.2],[2.0,.5,10.4]],[[7.2,1.6,4.2],[9.5,1.0,.5]]];
+function titleView(ts){
+  const per=14000,k=Math.floor(ts/per)%TITLE_PATH.length,u=(ts%per)/per,sh=TITLE_PATH[k];
+  pcam.position.set(sh[0][0]+Math.sin(u*2)*.25,sh[0][1]+Math.sin(ts/1700)*.02,sh[0][2]-u*.5*(k===1?-1:1)*(k===1?0:1));
+  if(k===1)pcam.position.x=sh[0][0]+u*2.2;
+  pcam.lookAt(sh[1][0],sh[1][1],sh[1][2]);if(pcam.fov!==62){pcam.fov=62;pcam.updateProjectionMatrix();}
+  if(u<.03&&!titleView.cut){titleView.cut=1;glitchAmt=.8;}else if(u>.05)titleView.cut=0;
+  glitchAmt=Math.max(0,glitchAmt-.03);
+  tvMode=1;body.visible=false;hideActors();
+  // ogni tanto, per un attimo, qualcuno in fondo al corridoio
+  if(k===1&&u>.55&&u<.6){ACT.ent.visible=true;ACT.ent.position.set(11.2,0,5.8);faceTo(ACT.ent,pcam.position.x,pcam.position.z);}
+  applyLights('day',ts);renderer.render(scene,pcam);
+  if(frame%15===0){const s=11520+((ts/1000)|0);$('osdTime').textContent='NOV 02 1998 '+fmtClock(s);}
+}
 function loop(ts){
   const dt=Math.min(.05,((ts-last)/1000)||.016);last=ts;frame++;
   try{
     if(toastT>0){toastT-=dt*1000;if(toastT<=0)toastEl.style.display='none';}
+    if(hintT>0){hintT-=dt*1000;if(hintT<=0)$('hint').style.display='none';}
     const t=ts/1000;
     if(mode==='day'){
       updateDay(dt);playerCamUpdate();updateBody(t);
@@ -1237,8 +1501,11 @@ function loop(ts){
     else if(mode==='text'||mode==='trans'){
       if(modal==='txt'&&txtPos<txtFull.length){txtPos=Math.min(txtFull.length,txtPos+dt*42);$('txtBox').textContent=txtFull.slice(0,txtPos|0);}
       if(prevMode==='night'&&N)updateNightView(ts);
+      else if(prevMode==='title')titleView(ts);
       else{playerCamUpdate();updateBody(t);renderDayView(ts);}
     }
+    else if(mode==='arms'){playerCamUpdate();updateBody(t);updateArms(dt,ts);renderDayView(ts);}
+    else if(mode==='intro'){if(IN)updateIntro(dt,ts);}
     else if(mode==='insert'){updateInsert(dt);body.visible=false;renderDayView(ts);}
     else if(mode==='tape'){
       updateTape(dt);
@@ -1249,46 +1516,39 @@ function loop(ts){
       }
     }
     else if(mode==='night'){if(N){updateNight(dt);if(N)updateNightView(ts);}}
-    else{ // titolo / fine
-      const a=ts/9000;pcam.position.set(3+Math.cos(a)*.6,1.5,2.7+Math.sin(a)*.3);pcam.lookAt(2.8,.9,.4);if(pcam.fov!==70){pcam.fov=70;pcam.updateProjectionMatrix();}
-      tvMode=1;body.visible=false;applyLights('day',ts);renderer.render(scene,pcam);
-    }
+    else titleView(ts); // titolo / fine
     glitchCss();
     if(frame%2===0)paintNoise();
-    if(!staticOn&&(mode==='tape'||mode==='night'))nz.style.opacity=.12+glitchAmt*.35;
+    if(!staticOn&&(mode==='tape'||mode==='night'||mode==='intro'))nz.style.opacity=.12+glitchAmt*.35;
+    if(mode==='day'&&frame%20===0&&Math.hypot(p.x-4.5,p.y-8.1)<3)paintMon();
   }catch(e){try{console.error(e);toast('Errore: '+(e&&e.message),4000);}catch(_){}}
   requestAnimationFrame(loop);
 }
 
 /* =============== AVVIO =============== */
 function refreshTitle(){
-  const s=loadLocal();
-  const has=!!(s&&s.night);
-  $('bStart').style.display=has?'none':'inline-block';
+  const s=loadLocal();const has=!!(s&&s.night);
   $('bCont').style.display=has?'inline-block':'none';
-  $('bNew').style.display=has?'inline-block':'none';
-  if(has)$('bCont').textContent='CONTINUA — Notte '+Math.min(2,s.night);
+  if(has)$('bCont').textContent='CONTINUA — NOTTE '+Math.min(2,s.night);
 }
 function startGame(fresh){
   audioInit();goFull();
-  $('title').style.display='none';
-  if(fresh)G=newState();
-  else{const s=loadLocal();G=s&&s.night?Object.assign(newState(),s):newState();if(G.night>2){G.night=2;}}
+  $('title').style.display='none';music.stop();
+  if(fresh){G=newState();startIntro();return;}
+  const s=loadLocal();G=s&&s.night?Object.assign(newState(),s):newState();if(G.night>2){G.night=2;}
   gset('drone',.05,.6);
-  if(G.night===1&&!G.flags.got_t1&&!G.flags.intro){
-    G.flags.intro=1;p.x=SOFA[0];p.y=SOFA[1];p.a=SOFA[2];p.pitch=-.1;
-    beginDay(['Ti svegli sul divano. La TV è spenta, ma il ronzio no.','Non ricordi come ti chiami. Non ricordi come sei arrivato qui.','Sul tavolino, un post-it giallo. La calligrafia è la tua. Non ricordi di averlo scritto.']);
-  }else if(G.night===1){
-    p.x=SOFA[0];p.y=SOFA[1];p.a=SOFA[2];p.pitch=0;
-    beginDay(['Sera. La casa è uguale a ieri, ma l\'odore è diverso.']);
-  }else{
-    p.x=2.5;p.y=5.8;p.a=0;p.pitch=0;
-    beginDay(['Sera. La casa è uguale a ieri, ma l\'odore è diverso.']);
-  }
+  if(G.night===1){p.x=SOFA[0];p.y=SOFA[1];p.a=SOFA[2];p.pitch=0;}
+  else{p.x=2.5;p.y=5.8;p.a=0;p.pitch=0;}
+  beginDay(['Sera. La casa è uguale a ieri, ma l\'odore è diverso.']);
 }
+function toTitle(){mode='title';$('press').style.display='none';$('title').style.display='flex';refreshTitle();music.start();setTimeout(()=>{try{$(($('bCont').style.display!=='none')?'bCont':'bStart').focus();}catch(e){}},50);}
+mode='press';$('press').style.display='flex';
+$('press').addEventListener('click',()=>{if(mode!=='press')return;audioInit();sfx.clunk();sfx.whirr();goFull();toTitle();});
 $('bStart').onclick=()=>startGame(true);
 $('bCont').onclick=()=>startGame(false);
-$('bNew').onclick=()=>startGame(true);
+$('bHow').onclick=()=>openJournal(true);
+$('bAgain').onclick=()=>{$('end').style.display='none';G=newState();startGame(true);};
+document.fonts&&document.fonts.load("40px 'Reenie Beanie'").catch(()=>{});
 addEventListener('resize',resize);
 resize();refreshTitle();
 $('loading').style.display='none';
