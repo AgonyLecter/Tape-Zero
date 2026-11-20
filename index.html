@@ -149,7 +149,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
   <div class="modal" id="news"><div id="newsP"></div></div>
   <div class="modal" id="end">
     <h2>FINE DELLA DEMO</h2>
-    <p id="endNext">Chi sei davvero? Cosa c'è sul Nastro Zero?<br>Quattro notti ancora. Tre finali. Uno solo è quello giusto.</p>
+    <p id="endNext">Dario è morto nel 1998. Allora chi si sveglia ogni sera in quella casa?<br>Quattro notti ancora. Tre finali. Uno solo è quello giusto.</p>
     <p style="opacity:.7">La storia continua nella versione completa.</p>
     <p id="endStat"></p>
     <p style="margin-top:14px"><button class="btn" id="bAgain" style="display:inline-block">Ricomincia da capo</button></p>
@@ -885,7 +885,7 @@ const NOTES={
   t1:{s:'v',t:'CUCINA 03:12\n\nGUARDA DIETRO DI TE\n\nSCAPPA'},
   pol1:{s:'a',t:'(sul retro della polaroid)\n\nI POST-IT NON LI SCRIVO IO.\n\nSIAMO IN DUE.'},
   t2:{s:'v',t:'BAGNO 02:05\n\nTU PARLI ALLO SPECCHIO\n\nNON ASCOLTARTI'},
-  t3:{s:'v',t:'TU, MENTRE LEGGI QUESTO\n\n(sul retro, ancora più storto)\nSCENDI. CONTA GLI SCHERMI.\nPRIMA CHE LO FACCIA LUI.'},
+  t3:{s:'v',t:'TU, MENTRE LEGGI QUESTO\n\n(sul retro, quasi illeggibile, parole cancellate e riscritte)\nSCENDI. CONTA GLI SCHERMI. PRIMA DI LUI.\nNON RICORDO PIÙ COME MI CHIAMO.\nOGNI NASTRO MI COSTA UN PEZZO.'},
   n7:{s:'b',t:'NON SCENDERE.\nLÀ SOTTO CI SONO\nLE NOTTI CHE HAI\nGIÀ VISSUTO.\n— io'},
   istr3:{s:'a',t:'(un foglio nuovo, la scrittura trema)\n\nCAM 7: LA CANTINA.\nLE TV SI ACCENDONO DA SOLE.\nSE SI ACCENDONO TUTTE E SETTE\nTI VEDE DA OGNI PARTE.\n\nGUARDALE E SI SPENGONO.\nMA NON GUARDARE SOLO LORO.'},
   n4:{s:'b',t:'SE TI VEDI DORMIRE,\nNON SVEGLIARTI.\n— io'},
@@ -1083,6 +1083,9 @@ function openJournal(how){
     if(F.frag3_2||F.seen_bill)D.push(F.frag3_2?'Il mio nome forse è Dario. La D. sulla bolletta, sullo specchio, la voce in cantina.':'Mi chiamo D.-qualcosa. Qualcuno ha grattato via il resto.');
     const TL=TRACES.filter(t=>F['trl_'+t.id]).map(t=>F['trl_'+t.id]+(t.from===G.night?' <b>(nuovo)</b>':''));
     h+='<h3>COSA È CAMBIATO IN CASA</h3>'+(TL.length?'<ul>'+TL.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'<p class="dim">Ogni mattina la casa è un po\' diversa. Ricorda com\'era.</p>');
+    let lostN=0;for(let nn=1;nn<G.night&&nn<=3;nn++)for(let k=0;k<3;k++)if(!F['frag'+nn+'_'+k])lostN++;
+    for(let k=0;k<lostN;k++)D.push('<span class="dim">[ un frammento perso: qui c\'era qualcosa da capire ]</span>');
+    if(F.blueBelieved)D.push('Ho creduto al blu '+F.blueBelieved+(F.blueBelieved>1?' volte.':' volta.')+' Ogni volta ci ha guadagnato qualcuno, e non ero io.');
     if(D.length)h+='<h3>COSA HO CAPITO</h3><ul>'+D.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
     const cl=CLUES.filter(c=>F[c.f]);
     h+=`<h3>INDIZI (${cl.length})</h3>`+(cl.length?'<ul>'+cl.map(c=>'<li>'+c.t+'</li>').join('')+'</ul>':'<p class="dim">Ancora niente. Guardati intorno.</p>');
@@ -1347,7 +1350,7 @@ function useZone(z){
     case 'receipt':F.seen_receipt=1;showText(['Uno scontrino sbiadito.','«VIDEONOLEGGIO STELLA — SVENDITA PER CHIUSURA. 1 VHS senza titolo — L. 1.000».','Non ricordi di averlo comprato.']);break;
     case 'bill':F.seen_bill=1;showText(['Una bolletta mai aperta.','Il destinatario è «D. ——». Il resto del nome è stato grattato via con un\'unghia.','Hai qualcosa sotto le unghie.']);break;
     case 'books':showText(['Manuali di videocamere. Cassette vergini ancora nel cellophane.','Un libro con l\'angolo piegato: «Come accorgersi di essere osservati».']);break;
-    case 'vase':F.seen_vase=1;showText(['Il vaso è pieno d\'acqua nera. Nessuna chiave.','Il post-it in corridoio mentiva. Non l\'hai scritto tu.']);break;
+    case 'vase':F.seen_vase=1;F.blueBelieved=(F.blueBelieved||0)+(F.vaseCounted?0:1);F.vaseCounted=1;saveState();showText(['Il vaso è pieno d\'acqua nera. Nessuna chiave.','Il post-it in corridoio mentiva. Non l\'hai scritto tu.']);break;
     case 'mirror':
       if(n===2&&F.seenT2&&!F.mirror2){
         F.mirror2=1;G.tattoos.push('QUELLO NELLO SPECCHIO ASPETTA');saveState();updateObj();
@@ -1707,6 +1710,7 @@ function paintFin(){const c=finTex.userData.c,g=c.getContext('2d');const d=new D
   g.font='bold 30px monospace';g.fillText(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear(),56,115);g.fillText(pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()),76,152);
   g.font='bold 24px monospace';g.fillStyle='#f33';g.fillText('● TU, ADESSO',70,200);finTex.needsUpdate=true;}
 function startFinale(){
+  G.flags.blueBelieved=(G.flags.blueBelieved||0)+1;G.flags.blueDoor=1;saveState();
   mode='finale';FN={t:0,step:0,from:pcam.position.clone(),q:pcam.quaternion.clone()};hideDayBtns();show('obj',0);$('cross').style.display='none';$('hint').style.display='none';hintQ.length=0;
   sfx.whisper();gset('drone',.2,2);
 }
@@ -1729,7 +1733,9 @@ function updateFinale(dt,ts){
     // la TV si avvicina
     if(t>3){const u=ease(clamp((t-3)/5,0,1))*.8;const c=CTV[6];scam.position.lerpVectors(new THREE.Vector3(...CAMS[6].p),c.vw,u);scam.lookAt(c.sc);scam.updateMatrixWorld();}
     applyLights('night',ts);renderer.render(scene,scam);glitchAmt=Math.max(0,glitchAmt-dt);
-    if(t>12){FN=null;$('cine').style.display='none';setStatic(false);hideNight();G.flags.demoDone=1;saveState();setStyle('day');endCard();}
+    if(t>12&&!FN.wake){FN.wake=1;$('cine').style.display='none';setStatic(false);hideNight();setStyle('day');$('blk').style.opacity=1;gset('hiss',0,.3);
+      setTimeout(()=>{setFrontDoor(false);p.x=SOFA[0];p.y=SOFA[1];p.a=SOFA[2];p.pitch=-.1;$('blk').style.opacity=0;mode='trans';prevMode='day';FN=null;
+        showText(['Ti svegli sul divano. Sei sudato. La TV è spenta.','La porta d\'ingresso è chiusa a chiave. Dall\'interno.','Sul braccio, l\'inchiostro blu è sbavato, come se qualcuno l\'avesse appena scritto.','Non era il futuro. Era quello che vuole farti vedere.','Se le credi, finisce così.'],()=>{G.flags.demoDone=1;saveState();endCard();});},1800);}
   }
 }
 function showNews(){
@@ -1759,7 +1765,7 @@ function winNight(){
     showText(MORN3.concat(fragLine(got)).concat(['Dalle scale arriva una corrente d\'aria fredda.','Di sopra, una porta sbatte. Poi resta aperta.']),()=>{beginDay(null,[16.2,4.9,0]);showHint('La porta d\'ingresso è aperta. Come diceva la scritta blu.',8000);});
   }
 }
-function fragLine(got){return got>=3?['Sul nastro di stanotte ci sono tutti e tre i frammenti. Sono nel Taccuino.']:['Sul nastro di stanotte hai registrato '+got+' frammenti su 3. Il resto è neve. Quello che hai perso, è perso.'];}
+function fragLine(got){return got>=3?['Sul nastro di stanotte ci sono tutti e tre i frammenti. Sono nel Taccuino.']:['Sul nastro di stanotte hai registrato '+got+' frammenti su 3. Il resto è neve.','Qualcosa che avresti potuto capire, non lo capirai. Nel Taccuino resta un vuoto.'];}
 function endCard(){
   mode='end';
   $('endStat').textContent='Morti: '+G.deaths+' · Tatuaggi: '+G.tattoos.length;
