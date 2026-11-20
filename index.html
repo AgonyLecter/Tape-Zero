@@ -106,6 +106,14 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
 #title #cloud{position:absolute;bottom:1.5vh;left:8%}#title #credit{position:absolute;bottom:5.5vh;left:8%}
 #fail{background:#000;z-index:25;font-size:clamp(26px,5vw,44px);text-align:center;padding:30px}
 #fail small{display:block;font-size:22px;opacity:.7;margin-top:14px}
+#news{background:#000;z-index:27}
+#newsP{background:#ece5cf;color:#1a1a1a;width:min(720px,88%);max-height:86vh;overflow:auto;padding:2.5vh 3.5vw;font-family:'Times New Roman',serif;box-shadow:0 10px 50px #000;transform:rotate(-1deg);text-align:left;filter:sepia(.3)}
+#newsP .mast{font-family:'Times New Roman',serif;font-size:min(5vw,7vh);font-weight:bold;text-align:center;border-bottom:3px double #222;letter-spacing:2px}
+#newsP .date{text-align:center;font-size:min(2vw,3vh);border-bottom:1px solid #222;margin-bottom:1.2vh}
+#newsP h4{font-size:min(4vw,6vh);margin:.6vh 0;line-height:1}
+#newsP p{font-size:min(2.3vw,3.4vh);line-height:1.3;margin:.6vh 0;column-count:2;column-gap:2vw}
+#newsP .ph{float:right;width:30%;height:14vh;background:repeating-linear-gradient(45deg,#333 0 2px,#555 2px 4px);margin:0 0 1vh 1.5vw;filter:contrast(1.4)}
+#newsP .tap{font-family:'VT323',monospace;text-align:right;opacity:.5;font-size:20px}
 #end{background:rgba(0,0,0,.93);z-index:28;text-align:center;padding:24px}
 #end h2{font-size:clamp(34px,7vw,64px);margin:0 0 10px;letter-spacing:4px}
 #end p{margin:4px 0;font-size:clamp(18px,3vw,26px);max-width:700px}
@@ -138,9 +146,11 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none
   <div class="modal" id="armsView"><div id="armsLbl">Le tue braccia — tocca per chiudere</div><div class="arm" id="armL"></div><div class="arm" id="armR"></div></div>
   <div class="modal" id="mirrorView"><div id="mirLbl">Lo specchio — tocca per chiudere</div><div id="mirFrame"></div></div>
   <div class="modal" id="fail"><div id="failTxt"></div><small>NASTRO DANNEGGIATO</small></div>
+  <div class="modal" id="news"><div id="newsP"></div></div>
   <div class="modal" id="end">
     <h2>FINE DELLA DEMO</h2>
-    <p id="endNext">Notte 4 — Il videonoleggio — presto.</p>
+    <p id="endNext">Chi sei davvero? Cosa c'è sul Nastro Zero?<br>Quattro notti ancora. Tre finali. Uno solo è quello giusto.</p>
+    <p style="opacity:.7">La storia continua nella versione completa.</p>
     <p id="endStat"></p>
     <p style="margin-top:14px"><button class="btn" id="bAgain" style="display:inline-block">Ricomincia da capo</button></p>
     <div id="credit">Creato da AgonyApp Studio</div>
@@ -373,7 +383,11 @@ frameZ(6,3.7,4.6,2.1,M.trim);
 frameX(6.6,3.8,4.7,2.1,M.trim);doorPanelX(6.6,3.8,4.7,2.1,M.door,false,'b',1);
 frameX(6.6,6.0,6.85,2.1,M.trim);doorPanelX(6.6,6.0,6.85,2.1,M.door,false,'a',1);
 frameX(6.6,10.5,11.35,2.1,M.trim);doorPanelX(6.6,10.5,11.35,2.1,M.door,true,'a',-1);
-frameZ(13,2.0,3.0,2.15,M.trimD);doorPanelZ(13,2.0,3.0,2.15,M.door,-1);
+frameZ(13,2.0,3.0,2.15,M.trimD);const frontDoor=doorPanelZ(13,2.0,3.0,2.15,M.door,-1);const frontKnob=house.children[house.children.length-1];
+const outside=plane(13.08,1.07,2.5,1.0,2.15,new THREE.MeshBasicMaterial({color:0xfffaf0}),0,-Math.PI/2);outside.visible=false;
+const outLight=new THREE.PointLight(0xfff4e0,0,9,1.2);outLight.position.set(12.6,1.4,2.5);scene.add(outLight);
+function setFrontDoor(o){frontKnob.visible=!o;outside.visible=o;outLight.intensity=o?6:0;
+  if(o){frontDoor.rotation.y=-1.3;frontDoor.position.set(13-.48*Math.sin(1.3),1.07,2.0+.48*Math.cos(1.3));}else{frontDoor.rotation.y=0;frontDoor.position.set(13,1.07,2.5);}}
 B(12.955,1.55,2.5,.02,.03,.03,M.brass); // spioncino
 frameZ(13,5.35,6.25,2.1,M.trimD);const cellarDoor=doorPanelZ(13,5.35,6.25,2.1,M.doorD,-1);const cellarKnob=house.children[house.children.length-1];
 const cellarDark=plane(13.06,1.05,5.8,.9,2.1,new THREE.MeshBasicMaterial({color:0x000000}),0,-Math.PI/2);cellarDark.visible=false;
@@ -415,7 +429,7 @@ void main(){vec2 c=vUv-.5;vec2 uv=.5+c*(1.+.18*dot(c,c));
 if(uv.x<0.||uv.x>1.||uv.y<0.||uv.y>1.){gl_FragColor=vec4(0.,0.,0.,1.);return;}
 float n=rnd(floor(uv*vec2(180.,140.))+floor(time*30.)*1.37);vec3 col;
 if(mode<.5){col=vec3(.004,.005,.004)+.01*(1.-length(c)*1.6);}
-else if(mode<1.5){col=vec3(n*n*.7+.01);}
+else if(mode<1.5){col=vec3(n*.85+.1);}
 else if(mode<2.5){col=texture2D(map,uv).rgb+(n-.5)*.03;}
 else{float off=(rnd(vec2(floor(uv.y*50.),floor(time*14.)))-.5)*.08*glitch;
  vec3 v=texture2D(map,vec2(uv.x+off,uv.y)).rgb;float gr=dot(v,vec3(.3,.59,.11));col=vec3(gr*1.4)+(n-.5)*(.04+glitch*.3);
@@ -585,16 +599,41 @@ cyl(17.2,2.6,4.9,.006,.006,.2,M.black,4);sph(17.2,2.47,4.9,.05,M.bulb);
 /* ---------- STUDIO (chiuso) ---------- */
 B(11,.4,9,1.2,.8,.6,M.wood,{col:1});
 
+/* dettagli: interruttori, prese, termosifoni */
+{const plate=lam({color:0xe6e1d2}),sw=lam({color:0xd8d2c0});
+ const swX=(x,z,sd)=>{B(x,1.1,z+sd*.075,.08,.12,.01,plate);B(x,1.1,z+sd*.082,.025,.04,.008,sw);};
+ const swZ=(x,z,sd)=>{B(x+sd*.075,1.1,z,.01,.12,.08,plate);B(x+sd*.082,1.1,z,.008,.04,.025,sw);};
+ const outX=(x,z,sd)=>{B(x,.3,z+sd*.075,.08,.08,.01,plate);};const outZ=(x,z,sd)=>{B(x+sd*.075,.3,z,.01,.08,.08,plate);};
+ swX(4.25,5,-1);swX(5.65,5,1);swX(7.25,5,-1);swX(3.55,6.6,1);swX(5.8,6.6,1);swZ(6,4.85,-1);swZ(12.92,1.75,-1);
+ outX(1.8,5,-1);outX(8.6,5,-1);outZ(.0,6.0,1);outX(3.6,11,-1);outZ(10,3.5,-1);
+ const rad=(x,z,len,alongZ,sd)=>{for(let k=0;k<Math.floor(len/.08);k++){const o=-len/2+.04+k*.08;if(alongZ)B(x+sd*.1,.45,z+o,.06,.5,.05,lam({color:0xd9d4c5}));else B(x+o,.45,z+sd*.1,.05,.5,.06,lam({color:0xd9d4c5}));}};
+ rad(0,2.9,1.0,true,1);rad(0,8.2,1.0,true,1);rad(7.6,0,.7,false,1);rad(6.65,11,.5,false,-1);
+}
 /* telecamere di sicurezza */
 const CAMS=[
   {n:'CAM 1 — CAMERA DA LETTO',p:[2.6,2.5,6.76],t:[2.4,.2,10.0]},
   {n:'CAM 2 — CORRIDOIO',p:[.2,2.42,5.8],t:[13,.8,5.8]},
-  {n:'CAM 3 — SALOTTO',p:[5.8,2.42,4.8],t:[1.6,.7,1.4]},
+  {n:'CAM 3 — SALOTTO',p:[2.1,2.45,4.85],t:[3.0,.6,.7]},
   {n:'CAM 4 — CUCINA',p:[6.3,2.45,.5],t:[9.2,.7,3.6]},
   {n:'CAM 5 — BAGNO',p:[5.2,2.42,6.85],t:[8.2,.9,9.5]},
   {n:'CAM 6 — INGRESSO',p:[10.2,2.42,4.8],t:[12.9,.9,1.8]},
   {n:'CAM 7 — CANTINA',p:[15.3,2.3,8.2],t:[19.4,.6,4.7]}];
-CAMS.forEach((c,i)=>{if(i===3)return;const g=new THREE.Group();g.position.set(c.p[0],c.p[1],c.p[2]);B(0,0,0,.12,.08,.16,M.black,{parent:g});B(0,.035,.07,.012,.012,.01,M.red,{parent:g});scene.add(g);g.lookAt(c.t[0],c.t[1],c.t[2]);});
+const camLeds=[],camModels=[];
+const camBodyM=lam({color:0xc9c6bd}),camDarkM=lam({color:0x2a2a2a}),glassM=new THREE.MeshLambertMaterial({color:0x0a1420,emissive:0x050a12});
+CAMS.forEach((c,i)=>{if(i===3)return;
+  const base=new THREE.Group();base.position.set(c.p[0],c.p[1]+.06,c.p[2]);scene.add(base);camModels.push(base);
+  const mount=new THREE.Mesh(new THREE.CylinderGeometry(.04,.045,.02,16),camBodyM);mount.position.y=.1;base.add(mount);   // piastra al soffitto
+  const arm=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.1,8),camDarkM);arm.position.y=.05;base.add(arm);
+  const head=new THREE.Group();base.add(head);head.lookAt(new THREE.Vector3(c.t[0]-c.p[0],c.t[1]-c.p[1]-.06,c.t[2]-c.p[2]).add(base.position));
+  const body=new THREE.Mesh(new THREE.BoxGeometry(.085,.075,.2),camBodyM);body.position.z=.06;head.add(body);
+  const shield=new THREE.Mesh(new THREE.BoxGeometry(.105,.008,.24),camBodyM);shield.position.set(0,.045,.075);head.add(shield);
+  const ring=new THREE.Mesh(new THREE.CylinderGeometry(.032,.032,.02,16),camDarkM);ring.rotation.x=Math.PI/2;ring.position.z=.165;head.add(ring);
+  const lens=new THREE.Mesh(new THREE.SphereGeometry(.024,14,10),glassM);lens.position.z=.17;head.add(lens);
+  for(let k=0;k<6;k++){const ir=new THREE.Mesh(new THREE.SphereGeometry(.004,6,4),new THREE.MeshBasicMaterial({color:0x551010}));const a=k/6*Math.PI*2;ir.position.set(Math.cos(a)*.034,Math.sin(a)*.03,.162);head.add(ir);}
+  const led=new THREE.Mesh(new THREE.SphereGeometry(.006,6,4),new THREE.MeshBasicMaterial({color:0xff2020}));led.position.set(.03,.025,.162);head.add(led);camLeds.push(led);
+  // cavo che corre lungo il soffitto
+  const cab=new THREE.Mesh(new THREE.CylinderGeometry(.005,.005,.8,5),camDarkM);cab.rotation.z=Math.PI/2;cab.position.set(-.4,.105,0);base.add(cab);
+});
 
 /* =============== LUCI =============== */
 const hemi=new THREE.HemisphereLight(0x8b93a0,0x2a2016,.25);scene.add(hemi);
@@ -609,7 +648,7 @@ addLight(3.35,.95,10.6,0xff9a50,2.6,6,'BED');
 addLight(6.8,2.5,8.6,0xe0f0ff,3.6,6,'BATH',.3);
 addLight(17.2,2.3,4.9,0xffd9a0,5,9,'CEL',.4);
 const irLight=new THREE.PointLight(0xffffff,0,14,1.1);scene.add(irLight);
-const tvLight=new THREE.PointLight(0xb0c4ff,0,5,1.6);tvLight.position.set(TVX,.9,1.2);scene.add(tvLight);
+const tvLight=new THREE.PointLight(0xb0c4ff,0,7,1.3);tvLight.position.set(TVX,.9,1.2);scene.add(tvLight);
 
 /* =============== PERSONAGGI =============== */
 function human(kind){
@@ -946,7 +985,7 @@ const armL=makeArm(-1),armR=makeArm(1);
 let armsT=0;const armsLook={x:0,y:0,tx:0,ty:0};let armsDrag=null;
 function setArmTex(arm,lines){const m=arm.userData.mat;if(m.map)m.map.dispose();m.map=skinTex(lines);m.needsUpdate=true;}
 function openArms(){
-  if(mode!=='day')return;
+  if(mode!=='day')return;if(peri.on){peri.on=false;ACT.ent2.visible=false;}
   const t=G.tattoos;setArmTex(armL,t.filter((_,i)=>i%2===0));setArmTex(armR,t.filter((_,i)=>i%2===1));
   {const L=$('armsList');L.innerHTML='';t.forEach(x=>{const sp=document.createElement(x[0]==='§'?'b':'span');sp.textContent='«'+x.replace(/^§/,'')+'»  ';L.appendChild(sp);});L.style.display=t.length?'block':'none';}
   mode='arms';armsT=0;armsG.visible=true;armsLook.x=armsLook.y=armsLook.tx=armsLook.ty=0;$('hint').style.display='none';hintT=0;p.pitch=clamp(p.pitch,-.15,.15);hideDayBtns();show('obj',0);$('cross').style.display='none';
@@ -1042,6 +1081,8 @@ function openJournal(how){
     if(F.frag1_1)D.push('Quella cosa guarda la TV mentre io dormo. Più viene guardata, più è forte?');
     if(F.cel_done)D.push('In cantina c\'è una TV per ogni notte. Sette in tutto. La settima si chiama «Nastro Zero».');
     if(F.frag3_2||F.seen_bill)D.push(F.frag3_2?'Il mio nome forse è Dario. La D. sulla bolletta, sullo specchio, la voce in cantina.':'Mi chiamo D.-qualcosa. Qualcuno ha grattato via il resto.');
+    const TL=TRACES.filter(t=>F['trl_'+t.id]).map(t=>F['trl_'+t.id]+(t.from===G.night?' <b>(nuovo)</b>':''));
+    h+='<h3>COSA È CAMBIATO IN CASA</h3>'+(TL.length?'<ul>'+TL.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'<p class="dim">Ogni mattina la casa è un po\' diversa. Ricorda com\'era.</p>');
     if(D.length)h+='<h3>COSA HO CAPITO</h3><ul>'+D.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
     const cl=CLUES.filter(c=>F[c.f]);
     h+=`<h3>INDIZI (${cl.length})</h3>`+(cl.length?'<ul>'+cl.map(c=>'<li>'+c.t+'</li>').join('')+'</ul>':'<p class="dim">Ancora niente. Guardati intorno.</p>');
@@ -1135,8 +1176,41 @@ function mkPostit(x,y,z,face){
   return m;
 }
 function mkTape(x,y,z){const g=new THREE.Group();g.position.set(x,y,z);const mat=lam({color:0x111111});B(0,.013,0,.19,.025,.105,mat,{parent:g});plane(0,.0262,-.022,.15,.04,lam({map:TX.label}),-Math.PI/2,0,g);plane(0,.0262,.025,.1,.035,lam({color:0x050505}),-Math.PI/2,0,g);for(const dx of[-.032,.032]){const r=cyl(dx,.0265,.025,.014,.014,.002,lam({color:0xd8d8d8}),12,g);}B(0,.026,.052,.19,.002,.004,lam({color:0x333333}),{parent:g});g.rotation.y=rr(-.6,.6);g.userData.glow=mat;return g;}
+/* ---------- segni lasciati in giro (cambiano ogni giorno) ---------- */
+const traceG=new THREE.Group();scene.add(traceG);
+function decal(x,y,z,w,h,ry,rx,draw,seed){const t=ctex(256,Math.round(256*h/w),(g,W,H,r)=>{g.clearRect(0,0,W,H);draw(g,W,H,r);},seed||77,false);const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshLambertMaterial({map:t,transparent:true,depthWrite:false}));m.position.set(x,y,z);m.rotation.set(rx||0,ry||0,0);traceG.add(m);return m;}
+const scratch=(g,W,H,r,n)=>{g.strokeStyle='rgba(235,215,190,.9)';g.lineWidth=7;g.lineCap='round';
+  for(let grp=0;grp<Math.ceil(n/5);grp++){const ox=20+grp*120;const c=Math.min(5,n-grp*5);for(let j=0;j<Math.min(4,c);j++){g.beginPath();g.moveTo(ox+j*20+r()*4,40+r()*8);g.lineTo(ox+j*20+r()*4,H-40+r()*8);g.stroke();}
+   if(c===5){g.beginPath();g.moveTo(ox-10,H-50);g.lineTo(ox+80,50);g.stroke();}}};
+const TRACES=[
+ {id:'tally',from:2,x:.5,y:9.7,label:'Esamina il muro',build:n=>decal(.078,1.05,9.7,.8,.45,Math.PI/2,0,(g,W,H,r)=>scratch(g,W,H,r,n===2?4:5)),
+  txt:n=>n===2?['Tacche incise nella carta da parati, accanto al letto. Quattro.','Le hai fatte con l\'unghia: ce n\'è ancora un pezzo, spezzato, nel muro.']:['Le tacche ora sono cinque. Una barrata sopra le altre.','Non ricordi di averla incisa. Ma hai l\'unghia rotta.'],
+  log:n=>n===2?'Tacche sul muro della camera: 4. Qualcuno conta i giorni.':'Le tacche sono diventate 5. Conto le notti, anche se non me lo ricordo.'},
+ {id:'steps',from:2,x:8.5,y:5.8,label:'Guarda il pavimento',build:()=>{for(let k=0;k<14;k++){const x=4.3+k*.62,z=5.7+(k%2?.14:-.14);decal(x,.008,z,.12,.26,0,-Math.PI/2,(g,W,H)=>{g.fillStyle='rgba(200,190,170,.55)';g.beginPath();g.ellipse(W/2,H*.62,W*.32,H*.3,0,0,7);g.fill();for(let t=0;t<5;t++){g.beginPath();g.arc(W*(.25+t*.13),H*.18,W*.07,0,7);g.fill();}},80+k).rotation.z=-Math.PI/2;}},
+  txt:()=>['Impronte di piedi nudi nella polvere del corridoio.','Partono dalla camera da letto e finiscono davanti alla porta della cantina. Sono della tua misura.'],
+  log:()=>'Impronte di piedi nudi: dalla mia camera alla porta della cantina. Le mie.'},
+ {id:'polfr',from:2,x:9.5,y:1.0,label:'Guarda la polaroid sul frigo',build:()=>decal(9.75,1.5,.716,.12,.14,0,0,(g,W,H)=>{g.fillStyle='#e6e1d4';g.fillRect(0,0,W,H);g.fillStyle='#1b1b1b';g.fillRect(14,14,W-28,H*.7);g.fillStyle='#5a1a1a';g.fillRect(40,60,W-80,70);g.fillStyle='#c9a184';g.beginPath();g.arc(70,70,14,0,7);g.fill();g.fillStyle='#222';g.font='bold 22px monospace';g.fillText('n.1',W-80,H-18);}),
+  txt:()=>['Una polaroid attaccata al frigo con una calamita.','Sei tu che dormi, fotografato dall\'alto. Accanto al letto, una macchia nera alta fino al soffitto.','Sul retro: «n.1 — non dormiva solo».'],
+  log:()=>'Polaroid sul frigo: io che dormo, e una macchia nera accanto al letto.'},
+ {id:'pic',from:3,x:12.0,y:6.0,label:'Guarda il quadro',build:()=>decal(12.0,1.55,6.495,.42,.52,Math.PI,0,(g,W,H,r)=>{g.fillStyle='#5a4228';g.fillRect(0,0,W,H);g.strokeStyle='#3a2a18';g.lineWidth=6;g.strokeRect(6,6,W-12,H-12);g.fillStyle='#2a2a2a';g.font='bold 26px monospace';g.fillText('non',W/2-28,H/2-10);g.fillText('guardarmi',W/2-72,H/2+24);}),
+  txt:()=>['Il quadro del corridoio è stato girato verso il muro.','Sul retro, a matita, la scrittura ordinata dei post-it: «non guardarmi».'],
+  log:()=>'Il quadro del corridoio girato verso il muro. «Non guardarmi», a matita.'},
+ {id:'mirD',from:3,x:7.9,y:8.45,label:'Guarda lo specchio',build:()=>decal(8.405,1.6,8.45,.5,.6,-Math.PI/2,0,(g,W,H)=>{g.fillStyle='rgba(235,240,245,.35)';g.fillRect(0,0,W,H);g.globalCompositeOperation='destination-out';g.lineWidth=22;g.lineCap='round';g.beginPath();g.moveTo(90,60);g.lineTo(90,H-60);g.quadraticCurveTo(W-30,H-60,W-60,H/2);g.quadraticCurveTo(W-30,60,90,60);g.stroke();g.globalCompositeOperation='source-over';g.fillStyle='rgba(235,240,245,.4)';for(let k=0;k<6;k++)g.fillRect(100+k*20,H-55,4,40+k*6);}),
+  txt:()=>['Lo specchio è appannato, anche se l\'acqua non scorre da giorni.','Qualcuno ci ha scritto col dito una lettera sola: D.','Le gocce colano dall\'interno del vetro.'],
+  log:()=>'Una D scritta col dito sullo specchio appannato. Dall\'interno.'},
+ {id:'tapes',from:3,x:3.0,y:2.9,label:'Guarda sotto il divano',build:()=>{for(let k=0;k<6;k++){const m=mkTape(2.2+k*.28,.002,3.05+(k%2)*.08);m.userData.glow=null;traceG.add(m);}},
+  txt:()=>['Sotto il divano, sei cassette in fila. Tutte senza etichetta.','Sul dorso di ognuna, a penna: «02-11-1998». La stessa data, sei volte.'],
+  log:()=>'Sei cassette sotto il divano, tutte datate 02-11-1998.'}
+];
+function buildTraces(){
+  traceG.clear();const n=G.night;
+  for(const t of TRACES){if(n<t.from)continue;t.build(n);}
+}
+function traceZones(){const n=G.night;return TRACES.filter(t=>n>=t.from).map(t=>({id:'trace',t,x:t.x,y:t.y,r:1.2,label:t.label+(G.flags['tr_'+t.id+n]?'':' •')}));}
+function newTraces(){const n=G.night;const l=TRACES.filter(t=>t.from===n);return [l.filter(t=>G.flags['tr_'+t.id+n]).length,l.length];}
 function buildDay(){
   itemGroup.clear();items=[];zones=[];const F=G.flags,n=G.night;
+  buildTraces();zones.push(...traceZones());setFrontDoor(n>=4);
   const add=(o,mesh)=>{if(['tape','cam'].includes(o.kind)&&F['got_'+o.id])return;if(mesh){itemGroup.add(mesh);o.mesh=mesh;}items.push(o);};
   hidCam.visible=false;
   if(n===1){
@@ -1157,7 +1231,7 @@ function buildDay(){
   zones.push({id:'tv',x:3.1,y:.9,r:1.6,label:'Usa la TV'});
   zones.push({id:'bed',x:3.3,y:9.6,r:1.4,label:'Vai a dormire'});
   zones.push({id:'front',x:12.6,y:2.5,r:1.3,label:'Porta d\'ingresso'});
-  setCellarDoor(n>=3&&!!F.seenT3);
+  setCellarDoor(n>=4||(n>=3&&!!F.seenT3));
   zones.push({id:'cellar',x:12.6,y:5.8,r:1.2,label:(n>=3&&F.seenT3)?'Scendi in cantina':'Porta della cantina'});
   // cantina
   CTV.forEach((c,i)=>zones.push({id:'ctv',i,x:c.zx,y:c.zz,r:.75,label:'Guarda la TV — '+(i===6?'7':'NOTTE '+(i+1))}));
@@ -1193,12 +1267,13 @@ function objText(){
     if(!F.cel_done){let c=0;for(let i=0;i<7;i++)if(F['ctv'+i])c++;return 'Guarda le sette TV della cantina ('+c+'/7).';}
     return 'Risali e vai a letto. Stanotte dovrai tenere d\'occhio anche la cantina (CAM 7).';
   }
+  if(n>=4)return 'La porta d\'ingresso è aperta. Fuori c\'è luce.';
   if(!F.got_t2)return 'Ti sei svegliato con una scritta sul braccio. Leggila (Braccia) e segui l\'indizio.';
   if(!F.seenT2)return 'Un altro nastro. Guardalo nel videoregistratore del salotto.';
   if(!F.mirror2)return 'Il nastro parla dello specchio del bagno. Vai a guardarti.';
   return 'Stanotte qualcosa userà il tuo corpo. Vai a letto e non perderlo di vista.';
 }
-function updateObj(){$('obj').textContent=objText();}
+function updateObj(){let t=objText();const k=newTraces();if(G.night<4&&k[1])t+='\nCose cambiate in casa da ieri: '+k[0]+'/'+k[1]+'.';$('obj').textContent=t;$('obj').style.whiteSpace='pre-line';}
 function beginDay(lines,pos,cb){
   buildDay();mode='day';modal=null;setStyle('day');hideNight();
   if(pos){p.x=pos[0];p.y=pos[1];p.a=pos[2];p.pitch=0;}
@@ -1246,6 +1321,7 @@ function useZone(z){
       else{tvMode=0;sfx.click();toast('TV spenta');}
       break;}
     case 'bed':{
+      if(n>=4){showText(['Non riesci a dormire. Di sopra, la porta è aperta.','La luce che entra è bianca, calda. Ti chiama.']);break;}
       const need=n===1?F.seenT1:(n===2?F.seenT2:F.cel_done);
       if(!need){showText(['Non puoi dormire. Non ancora.',n===3?(F.seenT3?'Prima devi scendere in cantina.':'Prima devi guardare il nuovo nastro.'):(n===1?'Prima devi guardare il nastro.':'Prima devi guardare il nuovo nastro.')]);}
       else{
@@ -1256,7 +1332,7 @@ function useZone(z){
         else go();
       }
       break;}
-    case 'front':F.seen_front=1;sfx.knock();if(F.blue_tat){showText(['La maniglia è fredda. Il tatuaggio blu dice che è aperta.','Non lo è. Non ancora.','Dall\'altra parte, qualcuno trattiene il respiro. Aspetta.']);break;}showText(['Chiusa a chiave. La serratura è dall\'esterno.','Dall\'altra parte della porta senti qualcuno respirare.','Forse sei tu.']);break;
+    case 'front':if(n>=4){startFinale();break;}F.seen_front=1;sfx.knock();if(F.blue_tat){showText(['La maniglia è fredda. Il tatuaggio blu dice che è aperta.','Non lo è. Non ancora.','Dall\'altra parte, qualcuno trattiene il respiro. Aspetta.']);break;}showText(['Chiusa a chiave. La serratura è dall\'esterno.','Dall\'altra parte della porta senti qualcuno respirare.','Forse sei tu.']);break;
     case 'cellar':if(n>=3&&F.seenT3){goCellar();break;}dayBright=.25;sfx.knock();showText(['Il chiavistello è arrugginito, non si muove.','Dall\'altra parte c\'è silenzio. Troppo.','Poi, piano, qualcosa bussa due volte. Dall\'interno.']);break;
     case 'studio':F.seen_studio=1;showText(['Lo studio. Chiuso a chiave.','Sotto la porta passa una luce azzurra che pulsa, come uno schermo acceso.']);break;
     case 'window':F.seen_window=1;showText(['Fuori non c\'è niente.','Né lampioni, né case, né cielo. Solo nero, come un televisore spento.']);break;
@@ -1266,6 +1342,7 @@ function useZone(z){
     case 'wallw':F.seen_wall=1;saveState();showText(['Lettere rosse, enormi, colate sul cemento.','«SETTE NOTTI. SETTE NASTRI. NON USCIRE PRIMA DELLA SETTIMA».','È la scrittura storta delle etichette.']);break;
     case 'box':F.seen_box=1;saveState();showText(['Uno scatolone: «VIDEONOLEGGIO STELLA — RESI».','Dentro, decine di cassette senza etichetta. Sul dorso di ognuna, a penna, la stessa data: 02-11-1998.']);break;
     case 'ctv':ctvLook(z.i);break;
+    case 'trace':{const t=z.t,n=G.night;if(!F['tr_'+t.id+n]){F['tr_'+t.id+n]=1;F['trl_'+t.id]=t.log(n);saveState();}showText(t.txt(n),()=>{buildDay();updateObj();const k=newTraces();if(k[1]&&k[0]===k[1])showHint('Hai trovato tutto quello che è cambiato da ieri. Qualcuno ti lascia dei segni: forse sei tu.',6000);});break;}
     case 'calendar':F.seen_cal=1;showText(['Un calendario fermo a novembre 1998.','Il giorno 2 è cerchiato in rosso. Sotto, con una scrittura storta: «IL NASTRO».']);break;
     case 'receipt':F.seen_receipt=1;showText(['Uno scontrino sbiadito.','«VIDEONOLEGGIO STELLA — SVENDITA PER CHIUSURA. 1 VHS senza titolo — L. 1.000».','Non ricordi di averlo comprato.']);break;
     case 'bill':F.seen_bill=1;showText(['Una bolletta mai aperta.','Il destinatario è «D. ——». Il resto del nome è stato grattato via con un\'unghia.','Hai qualcosa sotto le unghie.']);break;
@@ -1434,7 +1511,7 @@ function fragsUpdate(dt){
 function startFF(){if(N.ff)return;N.ff={t:0};showHint(N.frags.every(f=>f.done)?'Hai registrato tutto. Il nastro corre fino all\'alba.':'Non succederà altro, stanotte. Il nastro corre fino all\'alba.',3500);show('ff',1);gset('hiss',.2,.2);}
 function hideNight(){hintQ.length=0;['recbar','reclbl','cc','ff'].forEach(i=>show(i,0));['clock','camname','lucw','lucl','bWake','rec','nobj'].forEach(i=>show(i,0));$('cams').style.display='none';}
 function startNight(){
-  const num=G.night;
+  const num=G.night;peri.on=false;
   N={num,t:0,len:CFG.len,cam:0,luc:100,cams:num===1?[0,1,2,3]:(num===2?[0,1,2,3,4,5]:[0,1,2,3,4,5,6]),walkP:num===3?WALK3:WALK1,tvOn:[1,1,0,0,0,0,0],tvT:0,tvGaze:0,speed:1,
     entA:{on:false,p:0,boost:0,x:4.0,y:8.8,g:ACT.ent},
     ent2:{on:false,p:0,cam:0,x:0,y:0,g:ACT.ent2},
@@ -1523,7 +1600,7 @@ function placeNightActors(){
   for(const f of N.frags){f.g.userData.pose=f.pose||null;put(f.g,f.x,f.z,f.on&&!f.done&&!N.ff,f.face[0],f.face[1]);if(f.tv&&f.on&&!f.done)tvMode=1;}
   sleeper.visible=!N.sleeperUp;blanketUp.visible=!N.sleeperUp;blanket.visible=N.sleeperUp;
 }
-function setCam(c,fov,asp){scam.position.set(c.p[0],c.p[1],c.p[2]);scam.lookAt(c.t[0],c.t[1],c.t[2]);asp=asp||RW/RH;if(scam.fov!==(fov||78)||scam.aspect!==asp){scam.fov=fov||78;scam.aspect=asp;scam.updateProjectionMatrix();}scam.updateMatrixWorld();}
+function setCam(c,fov,asp){for(const m of camModels)m.visible=Math.hypot(m.position.x-c.p[0],m.position.z-c.p[2])>.6;scam.position.set(c.p[0],c.p[1],c.p[2]);scam.lookAt(c.t[0],c.t[1],c.t[2]);asp=asp||RW/RH;if(scam.fov!==(fov||78)||scam.aspect!==asp){scam.fov=fov||78;scam.aspect=asp;scam.updateProjectionMatrix();}scam.updateMatrixWorld();}
 function updateNight(dt){
   if(N.fail){N.fail.t+=dt;failTick();glitchAmt=Math.max(glitchAmt,.5);return;}
   if(N.ff){ // avanti veloce fino all'alba: le minacce si fermano
@@ -1622,6 +1699,49 @@ function failTick(){
 }
 function resetBed(){sleeper.visible=false;blanketUp.visible=false;blanket.visible=true;}
 const MORN1=['06:00. Ti svegli sul pavimento del corridoio. Non ricordi di esserti alzato.','Il letto è disfatto. Hai le dita fredde.','Sull\'avambraccio c\'è una scritta nuova, ancora gonfia: SOTTO IL LETTO.'];
+let FN=null;
+const finTex=(()=>{const c=document.createElement('canvas');c.width=320;c.height=240;const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.userData.c=c;return t;})();
+function paintFin(){const c=finTex.userData.c,g=c.getContext('2d');const d=new Date(),pad=v=>String(v).padStart(2,'0');
+  g.fillStyle='#0b0b0b';g.fillRect(0,0,320,240);for(let i=0;i<500;i++){const v=Math.random()*60|0;g.fillStyle=`rgb(${v},${v},${v})`;g.fillRect(Math.random()*320,Math.random()*240,2,1);}
+  g.fillStyle='#eee';g.font='bold 20px monospace';g.fillText('▶ PLAY  NASTRO ZERO',44,40);
+  g.font='bold 30px monospace';g.fillText(pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear(),56,115);g.fillText(pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()),76,152);
+  g.font='bold 24px monospace';g.fillStyle='#f33';g.fillText('● TU, ADESSO',70,200);finTex.needsUpdate=true;}
+function startFinale(){
+  mode='finale';FN={t:0,step:0,from:pcam.position.clone(),q:pcam.quaternion.clone()};hideDayBtns();show('obj',0);$('cross').style.display='none';$('hint').style.display='none';hintQ.length=0;
+  sfx.whisper();gset('drone',.2,2);
+}
+function updateFinale(dt,ts){
+  FN.t+=dt;const t=FN.t,f=$('flash');
+  if(FN.step===0){ // cammina verso la luce
+    const u=ease(clamp(t/4,0,1));pcam.position.lerpVectors(FN.from,new THREE.Vector3(12.85,1.6,2.5),u);pcam.quaternion.slerpQuaternions(FN.q,lookQ(pcam.position,new THREE.Vector3(14,1.5,2.5)),Math.min(1,u*2));
+    if(Math.random()<dt*2)sfx.step(0);
+    f.style.transition='none';f.style.opacity=String(clamp((t-1.5)/2.5,0,1));
+    applyLights('day',ts);renderer.render(scene,pcam);
+    if(t>4.3){FN.step=1;FN.t=0;sfx.boom(1.4);f.style.opacity='0';$('blk').style.opacity=1;gset('drone',0,.2);gset('hiss',0,.2);}
+  }else if(FN.step===1){ // silenzio, poi il giornale
+    if(t>2.2){FN.step=2;FN.t=0;showNews();}
+  }else if(FN.step===3){ // la telecamera della cantina: la settima TV si accende
+    setCam(CAMS[6],62);hideActors();body.visible=false;resetBed();
+    if(frame%10===0)paintFin();
+    if(t>1.5&&!FN.on){FN.on=1;sfx.clunk();glitchAmt=1;gset('hiss',.12,.2);}
+    if(t>4.5&&!FN.hb){FN.hb=1;sfx.heart();}
+    if(t>7&&!FN.txt){FN.txt=1;$('cine').style.display='block';$('cine').textContent='Il nastro mostra te.\nMentre guardi.';sfx.whisper();}
+    // la TV si avvicina
+    if(t>3){const u=ease(clamp((t-3)/5,0,1))*.8;const c=CTV[6];scam.position.lerpVectors(new THREE.Vector3(...CAMS[6].p),c.vw,u);scam.lookAt(c.sc);scam.updateMatrixWorld();}
+    applyLights('night',ts);renderer.render(scene,scam);glitchAmt=Math.max(0,glitchAmt-dt);
+    if(t>12){FN=null;$('cine').style.display='none';setStatic(false);hideNight();G.flags.demoDone=1;saveState();setStyle('day');endCard();}
+  }
+}
+function showNews(){
+  $('newsP').innerHTML=`<div class="mast">LA VOCE DI VALLEROSA</div><div class="date">Mercoledì 4 novembre 1998 · Cronaca</div>
+  <h4>Trovato morto davanti a casa. In cantina, sette televisori accesi.</h4><div class="ph"></div>
+  <p>È stato trovato all'alba di ieri, disteso sul vialetto della sua abitazione, con la porta d'ingresso spalancata alle spalle. <b>Dario M.</b>, 31 anni, viveva da solo; i vicini lo descrivono come una persona riservata, che negli ultimi mesi non usciva quasi più di casa.
+  All'interno i carabinieri hanno trovato telecamere nascoste in ogni stanza, decine di videocassette senza etichetta e, in cantina, sette televisori accesi disposti a semicerchio. Su uno solo scorreva ancora un nastro. Gli investigatori non hanno voluto rivelare cosa mostrasse.
+  Sulle braccia della vittima, scritte a penna. Una, secondo indiscrezioni, recitava: «non uscire prima della settima».</p>
+  <div class="tap">tocca per continuare</div>`;
+  $('news').style.display='flex';sfx.click();
+}
+$('news').addEventListener('click',()=>{if(!FN||FN.step!==2)return;$('news').style.display='none';$('blk').style.opacity=0;FN.step=3;FN.t=0;setStyle('cam');show('rec',1);show('camname',1);$('camname').textContent=CAMS[6].n;});
 const MORN3=['06:00. Ti svegli in cantina, seduto per terra davanti alle sette TV.','Sono tutte spente. Tranne la quarta.','Sullo schermo c\'è un\'insegna al neon che lampeggia: VIDEONOLEGGIO STELLA. E sotto, una vetrina. Dentro, qualcuno con la tua faccia sta mettendo in ordine le cassette.'];
 const MORN2=['06:00. Questa volta sei nel bagno, in piedi davanti allo specchio.','Il riflesso sorride un secondo dopo di te.','Sotto la porta c\'è un nastro nuovo. L\'etichetta dice: «TU, MENTRE LEGGI QUESTO».'];
 function winNight(){
@@ -1629,13 +1749,14 @@ function winNight(){
   N=null;mode='trans';resetBed();$('hint').style.display='none';
   if(n===1){
     G.night=2;G.tattoos.push('SOTTO IL LETTO');p.x=2.5;p.y=5.8;p.a=0;p.pitch=0;saveState();
-    showText(MORN1.concat(fragLine(got)),()=>{beginDay(null,[2.5,5.8,0]);showHint('Hai una scritta nuova sul braccio. Leggila con il pulsante Braccia (in alto).',7000);});
+    showText(MORN1.concat(fragLine(got)),()=>{beginDay(null,[2.5,5.8,0]);showHint('Hai una scritta nuova sul braccio. Leggila con il pulsante Braccia (in alto).',7000);showHint('Qualcosa in casa è cambiato durante la notte. Cerca le differenze: i segni con • si possono esaminare.',8000);});
   }else if(n===2){
     G.night=3;G.tattoos.push('NON GUARDARE IL SETTIMO NASTRO');p.x=7.6;p.y=8.45;p.a=0;p.pitch=0;saveState();
-    showText(MORN2.concat(fragLine(got)),()=>{beginDay(null,[7.6,8.45,-2.15]);showHint('Un nastro nuovo sotto la porta d\'ingresso.',6000);});
+    showText(MORN2.concat(fragLine(got)),()=>{beginDay(null,[7.6,8.45,-2.15]);showHint('Un nastro nuovo sotto la porta d\'ingresso.',6000);showHint('E la casa non è come ieri. Guardati intorno: cerca cosa è cambiato.',7000);});
   }else if(n===3){
     G.night=4;p.x=16.2;p.y=4.9;p.a=0;p.pitch=0;saveState();
-    showText(MORN3.concat(fragLine(got)),()=>endCard());
+    G.flags.demoEnd=1;saveState();
+    showText(MORN3.concat(fragLine(got)).concat(['Dalle scale arriva una corrente d\'aria fredda.','Di sopra, una porta sbatte. Poi resta aperta.']),()=>{beginDay(null,[16.2,4.9,0]);showHint('La porta d\'ingresso è aperta. Come diceva la scritta blu.',8000);});
   }
 }
 function fragLine(got){return got>=3?['Sul nastro di stanotte ci sono tutti e tre i frammenti. Sono nel Taccuino.']:['Sul nastro di stanotte hai registrato '+got+' frammenti su 3. Il resto è neve. Quello che hai perso, è perso.'];}
@@ -1702,7 +1823,7 @@ function applyLights(preset,ts,room){
   }
   let tv=0;
   if(tvMode===1)tv=rr(.5,1.1);else if(tvMode===2)tv=.9;else if(tvMode===3)tv=rr(.6,.9);
-  tvLight.intensity=tv*2.2*(preset==='day'?1:.6);tvLight.color.setHex(tvMode===2?0x5070ff:0xc0ccff);
+  tvLight.intensity=tv*2.2*(preset==='day'?1:1.6);tvLight.color.setHex(tvMode===2?0x5070ff:0xc0ccff);
   tvUni.mode.value=tvMode;tvUni.map.value=tvMode===3?tapeRT.texture:blueTex;tvUni.time.value=ts/1000;tvUni.glitch.value=glitchAmt;
   // le sette TV della cantina
   let on=0;const F=G.flags;
@@ -1710,6 +1831,7 @@ function applyLights(preset,ts,room){
     let m=0,map=blueTex;
     if(N&&N.num===3){m=N.tvOn[i]?1:0;}
     else if(G.night===3&&F.cel_in&&i<3){m=3;map=ctvRT[i].texture;}
+    if(FN&&FN.on&&i===6){m=3;map=finTex;}
     if(c.flash>0){c.flash-=.016;m=1;}
     c.uni.mode.value=m;c.uni.map.value=map;c.uni.time.value=ts/1000+i*3.1;c.uni.glitch.value=i===2?.15:glitchAmt*.5;if(m)on++;
   });
@@ -1728,6 +1850,22 @@ function collide(x,z,R){
   return false;
 }
 let stepAcc=0,last=0,frame=0;
+const PERI=[[11.6,5.8],[1.0,5.8],[4.2,7.2],[8.2,4.3],[12.2,3.6],[2.4,1.0],[6.4,9.8],[3.0,10.3]];
+let peri={t:25+Math.random()*20,on:false,g:null,life:0,seen:0};
+function updatePeri(dt){
+  if(G.night===1&&!G.flags.got_t1)return;
+  if(inCellar()||scareS){if(peri.on){peri.on=false;ACT.ent2.visible=false;}return;}
+  const g=ACT.ent2;
+  if(!peri.on){peri.t-=dt;if(peri.t>0)return;
+    const ca=Math.cos(p.a),sa=Math.sin(p.a);
+    const c=PERI.filter(q=>{const dx=q[0]-p.x,dz=q[1]-p.y,d=Math.hypot(dx,dz);return d>3.2&&d<9&&(dx*ca+dz*sa)/d<-.3;});
+    if(!c.length){peri.t=4;return;}
+    const q=c[(Math.random()*c.length)|0];peri.on=true;peri.life=0;peri.seen=0;g.visible=true;moveA(g,q[0],q[1]);faceTo(g,p.x,p.y);
+    setTimeout(()=>{if(peri.on)sfx.step(0);},400);return;}
+  peri.life+=dt;g.visible=true;faceTo(g,p.x,p.y);animH(g,dt,0);
+  if(seenBy(pcam,g)){peri.seen+=dt;if(peri.seen>.12){peri.on=false;g.visible=false;glitchAmt=.7;sfx.whisper();dayBright=.5;peri.t=40+Math.random()*50;G.flags.peri=(G.flags.peri||0)+1;}}
+  else if(peri.life>9){peri.on=false;g.visible=false;peri.t=30+Math.random()*40;}
+}
 function updateDay(dt){
   if(scareS){updateScare(dt);}
   dayBright+=(1-dayBright)*Math.min(1,dt*1.5);
@@ -1750,6 +1888,7 @@ function updateDay(dt){
     }
   }
   if(Math.random()<dt*.02){sfx.knock();}
+  updatePeri(dt);
   const cand=findCand();
   const b=$('bUse');
   if(cand&&!scareS){b.style.display='block';b.textContent=cand.label+' [E]';}else b.style.display='none';
@@ -1757,6 +1896,7 @@ function updateDay(dt){
   $('obj').style.display='block';
 }
 function playerCamUpdate(){
+  for(const m of camModels)m.visible=true;
   if(ctvZoom>=0){const c=CTV[ctvZoom];pcam.position.copy(c.vw);pcam.lookAt(c.sc);if(pcam.fov!==48){pcam.fov=48;pcam.updateProjectionMatrix();}return;}
   const bobY=Math.sin(p.bob)*.03,bobX=Math.cos(p.bob*.5)*.015;
   const ca=Math.cos(p.a),sa=Math.sin(p.a);
@@ -1845,6 +1985,7 @@ function loop(ts){
     }
     else if(mode==='arms'){playerCamUpdate();updateBody(t);updateArms(dt,ts);renderDayView(ts);}
     else if(mode==='intro'){if(IN)updateIntro(dt,ts);}
+    else if(mode==='finale'){if(FN)updateFinale(dt,ts);}
     else if(mode==='insert'){updateInsert(dt);body.visible=false;renderDayView(ts);}
     else if(mode==='tape'){
       updateTape(dt);
@@ -1856,6 +1997,7 @@ function loop(ts){
     }
     else if(mode==='night'){if(N){updateNight(dt);if(N)updateNightView(ts);}}
     else titleView(ts); // titolo / fine
+    if(frame%30===0)camLeds.forEach(l=>l.visible=!l.visible);
     glitchCss();
     if(frame%2===0)paintNoise();
     if(!staticOn&&(mode==='tape'||mode==='night'||mode==='intro'))nz.style.opacity=.12+glitchAmt*.35;
@@ -1868,15 +2010,16 @@ function loop(ts){
 function refreshTitle(){
   const s=loadLocal();const has=!!(s&&s.night);
   $('bCont').style.display=has?'inline-block':'none';
-  if(has)$('bCont').textContent='CONTINUA — NOTTE '+Math.min(3,s.night);
+  if(has)$('bCont').textContent=(s.night>=4?'CONTINUA — L\'ALBA':'CONTINUA — NOTTE '+s.night);
 }
 function startGame(fresh){
   audioInit();goFull();
   $('title').style.display='none';music.stop();
   if(fresh){G=newState();startIntro();return;}
-  const s=loadLocal();G=s&&s.night?Object.assign(newState(),s):newState();if(G.night>3){G.night=3;}
+  const s=loadLocal();G=s&&s.night?Object.assign(newState(),s):newState();if(G.night>4){G.night=4;}
   gset('drone',.05,.6);
   if(G.night===1){p.x=SOFA[0];p.y=SOFA[1];p.a=SOFA[2];p.pitch=0;}
+  else if(G.night>=4){p.x=16.2;p.y=4.9;p.a=0;p.pitch=0;}
   else{p.x=2.5;p.y=5.8;p.a=0;p.pitch=0;}
   beginDay(['Sera. La casa è uguale a ieri, ma l\'odore è diverso.']);
 }
